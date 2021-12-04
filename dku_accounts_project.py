@@ -1,7 +1,3 @@
-# Remote Repository에서 수정되었습니다.
-# Remote Repository에서 수정되었습니다.2
-# Remote Repository에서 수정되었습니다.3
-# Remote Repository에서 수정되었습니다.4
 import sys
 import os, os.path
 import datetime
@@ -102,8 +98,3 @@ if __name__ == '__main__':
     main = MainView()
     # main.show()
     sys.exit(app.exec_())
-
-# Local Repository에서 수정되었습니다.
-# Local Repository에서 수정되었습니다.
-# Local Repository에서 수정되었습니다.3
-# Local Repository에서 수정되었습니다.4
