@@ -1,0 +1,3 @@
+index : 1, type : expenditure, date : 2021-12-03, amount_money : 4300, place : 스타벅스, category : 간식, commet = "너무 많이 썼나?"
+index : 2, type : expenditure, date : 2021-12-03, amount_money : 7000, place : 맘스터치, category : 식사
+index : 3, type : expenditure, date : 2021-12-03, amount_money : 50000, place : 신세계, category : 선물
