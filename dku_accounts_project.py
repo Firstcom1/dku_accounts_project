@@ -6,35 +6,6 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWid
 
 todayFile_obj = None # 파일접근 제어
 
-class ItemAbstract:
-    '''
-        num(Int), type(Str), date(Str), category(Str), usePlace(Str), amountMoney(Int), comment(Str)
-    '''
-    def __init__(self, index, date, category, usePlace, amountMoney, comment):
-        self.index = index
-        self.date = date
-        self.category = category
-        self.usePlace = usePlace
-        self.amountMoney = amountMoney
-        self.comment = comment
-'''
-    Expenditure, Income, Asset -> ItemAbstract (맴버변수 초기화 코드 중복 최소화)
-'''
-class Expenditure(ItemAbstract):
-    def __init__(self, index, type, date, category, usePlace, amountMoney, comment):
-        super().__init__(index, type, date, category, usePlace, amountMoney, comment)
-        self.type = type
-
-class Income(ItemAbstract):
-    def __init__(self, index, type, date, category, usePlace, amountMoney, comment):
-        super().__init__(index, type, date, category, usePlace, amountMoney, comment)
-        self.type = type
-
-class Asset(ItemAbstract):
-    def __init__(self, index, type, date, category, usePlace, amountMoney, comment):
-        super().__init__(index, type, date, category, usePlace, amountMoney, comment)
-        self.type = type
-
 class MainView(QMainWindow):
     # QMainWindow 는 cetralwidget, menubar, statusbar 클래스를 포함하는 프로그램의 MainUI 역할을 한다.
     def __init__(self):
