@@ -92,6 +92,13 @@ class MainView(QMainWindow):
         selectedDay_month = selectedDate.month()
         selectedDay_year = selectedDate.year()
 
+    '''
+        #. Name: getPeriodStartDay()
+        #. Feature
+            (1) 실행조건 : 사용자가 DE_periodStartDay에서 날짜를 변경했을 때
+            (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
+            (3) 전역변수 periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year 에 해당 정보 저장
+    '''
     def getPeriodStartDay(self):
         global periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year
         periodStartDay = UI_set.DE_periodStartDay.date()
@@ -101,6 +108,13 @@ class MainView(QMainWindow):
         periodStartDay_year = periodStartDay.year()
         print(periodStartDay_detail)
 
+    '''
+        #. Name: getPeriodEndDay()
+        #. Feature
+            (1) 실행조건 : 사용자가 DE_periodEndDay에서 날짜를 변경했을 떄
+            (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
+            (3) 전역변수 periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year 에 해당 정보 저장
+    '''
     def getPeriodEndDay(self):
         global periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year
         periodEndDay = UI_set.DE_periodEndDay.date()
