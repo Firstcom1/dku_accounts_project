@@ -37,7 +37,7 @@
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="iconSize">
            <size>
@@ -648,7 +648,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="CB_typeOfMoeny">
+                <widget class="QComboBox" name="CB_typeOfMoney">
                  <item>
                   <property name="text">
                    <string>지출</string>
@@ -892,7 +892,7 @@
         <item>
          <widget class="QCalendarWidget" name="CW_selectDay">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="firstDayOfWeek">
            <enum>Qt::Sunday</enum>
@@ -918,6 +918,9 @@
             </item>
             <item>
              <widget class="QDateEdit" name="DE_periodStartDay">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="dateTime">
                <datetime>
                 <hour>0</hour>
@@ -968,6 +971,9 @@
             </item>
             <item>
              <widget class="QDateEdit" name="DE_periodEndDay">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="dateTime">
                <datetime>
                 <hour>0</hour>
