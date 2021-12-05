@@ -673,7 +673,18 @@
                 </widget>
                </item>
                <item>
-                <widget class="QDateEdit" name="DE_flowDate"/>
+                <widget class="QDateEdit" name="DE_flowDate">
+                 <property name="dateTime">
+                  <datetime>
+                   <hour>0</hour>
+                   <minute>0</minute>
+                   <second>0</second>
+                   <year>2021</year>
+                   <month>12</month>
+                   <day>1</day>
+                  </datetime>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>

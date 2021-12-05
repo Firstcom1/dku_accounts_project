@@ -53,7 +53,7 @@ class MainView(QMainWindow):
 
         self.setCentralWidget(UI_set)
         self.setWindowTitle("UI TEST")
-        # self.setWindowIcon(QtGui.QPixmap(resource_path("./images/communication.jpg")))
+        self.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
         self.resize(1300, 800)
         self.show()
 
@@ -152,7 +152,7 @@ if __name__ == '__main__':
     UI_set.DE_flowDate  <- 항목추가 Group에 존재하는 QDateEdit
 
 <TextBrowser>
-    UI_set.TB_displayTips
+    UI_set.TB_displayTips  <- 사용자 지출, 수입 내역을 기반으로한 재무관리 TIP 제공하는 QTextBrowser
 
 <PushButton>
     UI_set.BT_compareByStatic  <- 통계자료로 사용자 데이터 기반 비교를 위한 UI표시 이벤트 발생 QPushButton
