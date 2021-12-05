@@ -52,7 +52,7 @@ class MainView(QMainWindow):
         UI_set.DE_periodEndDay.dateChanged.connect(self.getPeriodEndDay)
 
         self.setCentralWidget(UI_set)
-        self.setWindowTitle("UI TEST")
+        self.setWindowTitle("가계부")
         self.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
         self.resize(1300, 800)
         self.show()
