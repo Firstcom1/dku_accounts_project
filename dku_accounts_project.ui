@@ -27,608 +27,814 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="3,2">
       <item>
-       <widget class="QTabWidget" name="TAB_displayType">
-        <property name="tabPosition">
-         <enum>QTabWidget::North</enum>
-        </property>
-        <property name="tabShape">
-         <enum>QTabWidget::Rounded</enum>
-        </property>
-        <property name="currentIndex">
-         <number>1</number>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>16</width>
-          <height>16</height>
-         </size>
-        </property>
-        <property name="elideMode">
-         <enum>Qt::ElideNone</enum>
-        </property>
-        <widget class="QWidget" name="All_MoneyFlow">
-         <attribute name="title">
-          <string>전체 출납목록</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <item>
+         <widget class="QTabWidget" name="TAB_displayType">
+          <property name="tabPosition">
+           <enum>QTabWidget::North</enum>
+          </property>
+          <property name="tabShape">
+           <enum>QTabWidget::Rounded</enum>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
+          </property>
+          <property name="elideMode">
+           <enum>Qt::ElideNone</enum>
+          </property>
+          <widget class="QWidget" name="All_MoneyFlow">
+           <attribute name="title">
+            <string>전체 출납목록</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout">
+             <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
-               <widget class="QCheckBox" name="checkBox">
-                <property name="text">
-                 <string>지출 카테고리 지정</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <item>
+                 <widget class="QCheckBox" name="CH_fixEPCategory">
+                  <property name="text">
+                   <string>지출 카테고리 지정</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="CB_fixEPCategory">
+                  <item>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>고정지출</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>간식</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>선물</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>공부</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>취미</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="CH_fixIncomCategory">
+                  <property name="text">
+                   <string>수입 카테고리 지정</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="CB_fixIncomeCategory">
+                  <item>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>간식</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>선물</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>공부</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>취미</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox">
+               <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3">
                 <item>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
+                 <widget class="QTableWidget" name="TW_displayAllAccounts">
+                  <property name="dragEnabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="dragDropMode">
+                   <enum>QAbstractItemView::DragDrop</enum>
+                  </property>
+                  <property name="defaultDropAction">
+                   <enum>Qt::IgnoreAction</enum>
+                  </property>
+                  <property name="sortingEnabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="rowCount">
+                   <number>10</number>
+                  </property>
+                  <property name="columnCount">
+                   <number>6</number>
+                  </property>
+                  <attribute name="horizontalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderCascadingSectionResizes">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderDefaultSectionSize">
+                   <number>100</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <column>
+                   <property name="text">
+                    <string>현금흐름 유형</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>날짜</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>사용처</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>금액</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>코멘트</string>
+                   </property>
+                  </column>
+                  <item row="0" column="0">
+                   <property name="text">
+                    <string>지출</string>
+                   </property>
+                  </item>
+                  <item row="0" column="1">
+                   <property name="text">
+                    <string>2021-12-12</string>
+                   </property>
+                  </item>
+                  <item row="0" column="2">
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item row="0" column="3">
+                   <property name="text">
+                    <string>하남돼지</string>
+                   </property>
+                  </item>
+                  <item row="0" column="4">
+                   <property name="text">
+                    <string>24,000</string>
+                   </property>
+                  </item>
+                  <item row="0" column="5">
+                   <property name="text">
+                    <string>알바 회식</string>
+                   </property>
+                  </item>
+                 </widget>
                 </item>
-                <item>
-                 <property name="text">
-                  <string>고정지출</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>간식</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>선물</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>공부</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>취미</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_4">
-                <property name="text">
-                 <string>수입 카테고리 지정</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboBox_7">
-                <item>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>간식</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>선물</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>공부</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>취미</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3">
-              <item>
-               <widget class="QTableWidget" name="TW_test">
-                <property name="dragEnabled">
-                 <bool>false</bool>
-                </property>
-                <property name="dragDropMode">
-                 <enum>QAbstractItemView::DragDrop</enum>
-                </property>
-                <property name="defaultDropAction">
-                 <enum>Qt::IgnoreAction</enum>
-                </property>
-                <property name="sortingEnabled">
-                 <bool>true</bool>
-                </property>
-                <property name="rowCount">
-                 <number>10</number>
-                </property>
-                <property name="columnCount">
-                 <number>6</number>
-                </property>
-                <attribute name="horizontalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>100</number>
-                </attribute>
-                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <column>
-                 <property name="text">
-                  <string>현금흐름 유형</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>날짜</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>사용처</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>금액</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>코멘트</string>
-                 </property>
-                </column>
-                <item row="0" column="0">
-                 <property name="text">
-                  <string>지출</string>
-                 </property>
-                </item>
-                <item row="0" column="1">
-                 <property name="text">
-                  <string>2021-12-12</string>
-                 </property>
-                </item>
-                <item row="0" column="2">
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item row="0" column="3">
-                 <property name="text">
-                  <string>하남돼지</string>
-                 </property>
-                </item>
-                <item row="0" column="4">
-                 <property name="text">
-                  <string>24,000\</string>
-                 </property>
-                </item>
-                <item row="0" column="5">
-                 <property name="text">
-                  <string>알바 회식</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="Expenditure">
-         <attribute name="title">
-          <string>지출</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_25">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QCheckBox" name="checkBox_2">
-                <property name="text">
-                 <string>지출 카테고리 지정</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboBox_2">
-                <item>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>간식</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>선물</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>공부</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>취미</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3">
-              <item>
-               <widget class="QTableWidget" name="TW_test_2">
-                <property name="sortingEnabled">
-                 <bool>true</bool>
-                </property>
-                <property name="rowCount">
-                 <number>10</number>
-                </property>
-                <property name="columnCount">
-                 <number>6</number>
-                </property>
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderMinimumSectionSize">
-                 <number>50</number>
-                </attribute>
-                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <column>
-                 <property name="text">
-                  <string>현금흐름 유형</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>날짜</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>사용처</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>금액</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>코멘트</string>
-                 </property>
-                </column>
-                <item row="0" column="0">
-                 <property name="text">
-                  <string>지출</string>
-                 </property>
-                </item>
-                <item row="0" column="1">
-                 <property name="text">
-                  <string>2021-12-12</string>
-                 </property>
-                </item>
-                <item row="0" column="2">
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item row="0" column="3">
-                 <property name="text">
-                  <string>하남돼지</string>
-                 </property>
-                </item>
-                <item row="0" column="4">
-                 <property name="text">
-                  <string>24,000\</string>
-                 </property>
-                </item>
-                <item row="0" column="5">
-                 <property name="text">
-                  <string>알바 회식</string>
-                 </property>
-                </item>
-               </widget>
+               </layout>
               </item>
              </layout>
             </item>
            </layout>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="Income">
-         <attribute name="title">
-          <string>수입</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
+          </widget>
+          <widget class="QWidget" name="Expenditure">
+           <attribute name="title">
+            <string>지출</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_25">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QCheckBox" name="checkBox_3">
-                <property name="text">
-                 <string>수입 카테고리 지정</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <item>
+                 <widget class="QCheckBox" name="CH_fixEPCategory_2">
+                  <property name="text">
+                   <string>지출 카테고리 지정</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="CB_fixEPCategory_2">
+                  <item>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>간식</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>선물</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>공부</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>취미</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox_3">
+               <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3">
                 <item>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
+                 <widget class="QTableWidget" name="TW_displayExpenditure">
+                  <property name="sortingEnabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="rowCount">
+                   <number>10</number>
+                  </property>
+                  <property name="columnCount">
+                   <number>6</number>
+                  </property>
+                  <attribute name="horizontalHeaderCascadingSectionResizes">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderMinimumSectionSize">
+                   <number>50</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <column>
+                   <property name="text">
+                    <string>현금흐름 유형</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>날짜</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>사용처</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>금액</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>코멘트</string>
+                   </property>
+                  </column>
+                  <item row="0" column="0">
+                   <property name="text">
+                    <string>지출</string>
+                   </property>
+                  </item>
+                  <item row="0" column="1">
+                   <property name="text">
+                    <string>2021-12-12</string>
+                   </property>
+                  </item>
+                  <item row="0" column="2">
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item row="0" column="3">
+                   <property name="text">
+                    <string>하남돼지</string>
+                   </property>
+                  </item>
+                  <item row="0" column="4">
+                   <property name="text">
+                    <string>24,000</string>
+                   </property>
+                  </item>
+                  <item row="0" column="5">
+                   <property name="text">
+                    <string>알바 회식</string>
+                   </property>
+                  </item>
+                 </widget>
                 </item>
-                <item>
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>간식</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>선물</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>공부</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>취미</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3">
-              <item>
-               <widget class="QTableWidget" name="TW_test_3">
-                <property name="sortingEnabled">
-                 <bool>true</bool>
-                </property>
-                <property name="rowCount">
-                 <number>10</number>
-                </property>
-                <property name="columnCount">
-                 <number>6</number>
-                </property>
-                <attribute name="horizontalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="verticalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-                 <bool>false</bool>
-                </attribute>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <row/>
-                <column>
-                 <property name="text">
-                  <string>현금흐름 유형</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>날짜</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>카테고리</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>사용처</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>금액</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>코멘트</string>
-                 </property>
-                </column>
-                <item row="0" column="0">
-                 <property name="text">
-                  <string>지출</string>
-                 </property>
-                </item>
-                <item row="0" column="1">
-                 <property name="text">
-                  <string>2021-12-12</string>
-                 </property>
-                </item>
-                <item row="0" column="2">
-                 <property name="text">
-                  <string>식사</string>
-                 </property>
-                </item>
-                <item row="0" column="3">
-                 <property name="text">
-                  <string>하남돼지</string>
-                 </property>
-                </item>
-                <item row="0" column="4">
-                 <property name="text">
-                  <string>24,000\</string>
-                 </property>
-                </item>
-                <item row="0" column="5">
-                 <property name="text">
-                  <string>알바 회식</string>
-                 </property>
-                </item>
-               </widget>
+               </layout>
               </item>
              </layout>
             </item>
            </layout>
-          </item>
-         </layout>
-        </widget>
-       </widget>
+          </widget>
+          <widget class="QWidget" name="Income">
+           <attribute name="title">
+            <string>수입</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <widget class="QCheckBox" name="CH_fixIncomCategory_2">
+                  <property name="text">
+                   <string>수입 카테고리 지정</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="CB_fixIncomeCategory_2">
+                  <item>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>간식</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>선물</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>공부</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>취미</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3">
+                <item>
+                 <widget class="QTableWidget" name="TW_displayIncome">
+                  <property name="sortingEnabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="rowCount">
+                   <number>10</number>
+                  </property>
+                  <property name="columnCount">
+                   <number>6</number>
+                  </property>
+                  <attribute name="horizontalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderCascadingSectionResizes">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderCascadingSectionResizes">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+                   <bool>false</bool>
+                  </attribute>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <row/>
+                  <column>
+                   <property name="text">
+                    <string>현금흐름 유형</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>날짜</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>카테고리</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>사용처</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>금액</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>코멘트</string>
+                   </property>
+                  </column>
+                  <item row="0" column="0">
+                   <property name="text">
+                    <string>지출</string>
+                   </property>
+                  </item>
+                  <item row="0" column="1">
+                   <property name="text">
+                    <string>2021-12-12</string>
+                   </property>
+                  </item>
+                  <item row="0" column="2">
+                   <property name="text">
+                    <string>식사</string>
+                   </property>
+                  </item>
+                  <item row="0" column="3">
+                   <property name="text">
+                    <string>하남돼지</string>
+                   </property>
+                  </item>
+                  <item row="0" column="4">
+                   <property name="text">
+                    <string>24,000</string>
+                   </property>
+                  </item>
+                  <item row="0" column="5">
+                   <property name="text">
+                    <string>알바 회식</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="GB_addItemInfo">
+          <property name="title">
+           <string>항목 추가</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="1,0,1,0">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <item>
+                <widget class="QLabel" name="LB_typeOfMoeny">
+                 <property name="text">
+                  <string>현금흐름 유형</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="CB_typeOfMoeny">
+                 <item>
+                  <property name="text">
+                   <string>지출</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>수입</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_12">
+               <item>
+                <widget class="QLabel" name="LB_flowDate">
+                 <property name="text">
+                  <string>날짜</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDateEdit" name="DE_flowDate"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <item>
+                <widget class="QLabel" name="LB_categoryItem">
+                 <property name="text">
+                  <string>카테고리</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="CB_categoryItem">
+                 <item>
+                  <property name="text">
+                   <string>카테고리</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>식사</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>간식</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>선물</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>공부</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>취미</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="Line" name="line_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_14">
+               <item>
+                <widget class="QLabel" name="LB_usePlace">
+                 <property name="text">
+                  <string>사용처</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="LE_usePlace">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <item>
+                <widget class="QLabel" name="LB_amountOfMoney">
+                 <property name="text">
+                  <string>금액</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="LE_amountOfMoeny">
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_16">
+               <item>
+                <widget class="QLabel" name="LB_comment">
+                 <property name="text">
+                  <string>코멘트</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="LE_comment">
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="BT_addItem">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>80</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>항목추가</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="GB_viewSelectedWay">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -640,14 +846,14 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="RB_viewByPeriod">
              <property name="text">
               <string>기간별 조회</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="RB_viewByDay">
              <property name="text">
               <string>일별 조회</string>
              </property>
@@ -674,7 +880,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="LB_usage">
              <property name="text">
               <string>사용법 : 일별 조회 시 켈린더에 해당 날짜를 클릭하세요!</string>
              </property>
@@ -684,7 +890,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QCalendarWidget" name="calendarWidget">
+         <widget class="QCalendarWidget" name="CW_selectDay">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -704,14 +910,14 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QLabel" name="label_2">
+             <widget class="QLabel" name="LB_periodStartDay">
               <property name="text">
                <string>조회기간 시작일</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDateEdit" name="dateEdit_2">
+             <widget class="QDateEdit" name="DE_periodStartDay">
               <property name="dateTime">
                <datetime>
                 <hour>0</hour>
@@ -754,14 +960,14 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QLabel" name="label_6">
+             <widget class="QLabel" name="LB_periodEndDay">
               <property name="text">
                <string>조회기간 종료일</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDateEdit" name="dateEdit_4">
+             <widget class="QDateEdit" name="DE_periodEndDay">
               <property name="dateTime">
                <datetime>
                 <hour>0</hour>
@@ -779,7 +985,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QTextBrowser" name="textBrowser">
+         <widget class="QTextBrowser" name="TB_displayTips">
           <property name="html">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -790,7 +996,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="BT_compareByStatic">
           <property name="text">
            <string>재무관리 통계 비교</string>
           </property>
@@ -812,7 +1018,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_12">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="LB_monthState">
           <property name="font">
            <font>
             <family>돋움</family>
@@ -825,7 +1031,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit">
+         <widget class="QLineEdit" name="LE_moneyState">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -860,7 +1066,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_13">
         <item>
-         <widget class="QLabel" name="label_4">
+         <widget class="QLabel" name="LB_dayState">
           <property name="font">
            <font>
             <family>돋움</family>
@@ -873,7 +1079,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_4">
+         <widget class="QLineEdit" name="LE_dayState">
           <property name="minimumSize">
            <size>
             <width>0</width>
