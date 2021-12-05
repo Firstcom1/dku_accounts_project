@@ -9,17 +9,25 @@ selectedDay_day = 0 # dataType: Int, form: 5
 selectedDay_month = 0 # dataType:Int, form: 12
 selectedDay_year = 0 # dataType: Int, form : 2021
 
-periodStartDay_detail = 0
-periodStartDay_day = 0
-periodStartDay_month = 0
-periodStartDay_year = 0
-# 위와 동일
+periodStartDay_detail = 0 # dataType: Str
+periodStartDay_day = 0 # dataType: Int
+periodStartDay_month = 0 # dataType: Int
+periodStartDay_year = 0 # dataType: Int
 
-periodEndDay_detail = 0
-periodEndDay_day = 0
-periodEndDay_month = 0
-periodEndDay_year = 0
-# 위와 동일
+periodEndDay_detail = 0 # dataType: Str
+periodEndDay_day = 0 # dataType: Int
+periodEndDay_month = 0 # dataType: Int
+periodEndDay_year = 0 # dataType: Int
+
+addItem_typeMoney = 0 # dataType: Str
+addItem_dateMoney = 0 # dataType: Str
+addItem_categoryMoney = 0 # dataType: Str
+addItem_placeMoney = 0 # dataType: Str
+addItem_amountMoney = 0 # dataType: Str
+addItem_commentMoney = 0 # dataType: Str
+addItem_fixedMoney = 0 # dataType: Bool
+# "항목추가"에 필요한 정보들
+# 잠재적으로 데이터파일에 insert
 
 class MainView(QMainWindow):
     def __init__(self):
@@ -27,8 +35,10 @@ class MainView(QMainWindow):
         self.setupUI()
 
     def setupUI(self):
-        global UI_set
+        global UI_set, ErrorUI
+        global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
         UI_set = QtUiTools.QUiLoader().load(resource_path("./dku_accounts_project.ui"))
+        ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
 
         # TW(TableWidget)의 열_헤더부분 활성화
         UI_set.TW_displayAllAccounts.horizontalHeader().setVisible(True)
@@ -51,11 +61,35 @@ class MainView(QMainWindow):
         UI_set.DE_periodStartDay.dateChanged.connect(self.getPeriodStartDay)
         UI_set.DE_periodEndDay.dateChanged.connect(self.getPeriodEndDay)
 
+        # 항목추가 中 "현금흐름 유형"에 대한 정보를 받아 전역변수에 저장
+        addItem_typeMoney = UI_set.CB_typeMoney.currentText() # Default값: "지출"
+        UI_set.CB_typeMoney.currentTextChanged.connect(self.getAddItem_typeMoney) # 변경되면 갱신, "고정지출" 라벨(LB) <-> "고정수입" 라벨(LB)
+
+        # 항목추가 中 "날짜"에 대한 정보를 받아 전역변수에 저장
+        addItem_date = UI_set.DE_dateMoney.date()
+        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.month()) + "-" + str(addItem_date.day()) # Default값: "2021-12-01"
+        UI_set.DE_dateMoney.dateChanged.connect(self.getAddItem_dateMoney) # 변경되면 갱신
+
+        # 항목추가 中 "카테고리"에 대한 정보를 받아 전역변수에 저장
+        addItem_categoryMoney = UI_set.CB_categoryMoney.currentText()  # Default값: "카테고리"
+        UI_set.CB_categoryMoney.currentTextChanged.connect(self.getAddItem_categoryMoney) # 변경되면 갱신
+
+        # 항목추가 中 "항목추가" 버튼을 클릭했을 때 addItem_typeMoney, addItem_date, addItem_categoryMoney 이외에 나머지
+        # addItem_placeMoney, addItem_amountMoney, addItem_commentMoney와 함께 데이터를 취합저장
+        # 단, addItem_placeMoney, addItem_amountMoney의 항목이 채워져 있지 않으면 항목추가 거부
+        UI_set.BT_addItem.clicked.connect(self.getAddItem_remainValues)
+
+        ErrorUI.BT_close.clicked.connect(self.closeError)
+
         self.setCentralWidget(UI_set)
         self.setWindowTitle("가계부")
         self.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
         self.resize(1300, 800)
         self.show()
+
+        ErrorUI.setWindowTitle("Error")
+        ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
+        ErrorUI.resize(450, 200)
 
     '''
         #. Name: EnableViewDay()
@@ -124,6 +158,78 @@ class MainView(QMainWindow):
         periodEndDay_year = periodEndDay.year()
         print(periodEndDay_detail)
 
+    '''
+        #. Name: getAddItem_typeMoney()
+        #. Feature
+            (1) 실행조건 : 사용자가 CB_typeMoney에서 "현금흐름 유형"을 변경했을 떄
+            (2) 변경된 "현금흐름 유형" 사항을 갱신
+    '''
+    def getAddItem_typeMoney(self):
+        global addItem_typeMoney
+        addItem_typeMoney = UI_set.CB_typeMoney.currentText()
+
+        if addItem_typeMoney == "지출":
+            UI_set.CH_fixedMoney.setText("고정지출")
+        elif addItem_typeMoney == "수입":
+            UI_set.CH_fixedMoney.setText("고정수입")
+    '''
+        #. Name: getAddItem_dateMoney()
+        #. Feature
+            (1) 실행조건 : 사용자가 DE_dateMoney에서 "날짜"를 변경했을 떄
+            (2) 변경된 "날짜" 사항을 갱신
+    '''
+    def getAddItem_dateMoney(self):
+        global addItem_dateMoney
+        addItem_date = UI_set.DE_dateMoney.date()
+        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.money()) + "-" + str(addItem_date.day())
+
+    '''
+        #. Name: getAddItem_categoryMoney()
+        #. Feature
+            (1) 실행조건 : 사용자가 CB_categoryMoney에서 "카테고리"를 변경했을 떄
+            (2) 변경된 "카테고리" 사항을 갱신
+    '''
+    def getAddItem_categoryMoney(self):
+        global addItem_categoryMoney
+        addItem_categoryMoney = UI_set.CB_categoryMoney.currentText()
+
+    '''
+        #. Name: getAddItem_remainValues()
+        #. Feature
+            (1) 실행조건 : 사용자가 항목추가 中 "항목추가" 버튼을 눌렀을 때
+            (2) 나머지 "사용처", "금액", "코멘트", "고정"여부를 받아와 전역변수에 저장
+            (3) 만약 "사용처", "금액", "카테고리" 란이 비었으면 에러메세지를 띄움. -> 데이터파일 저장 거부
+    '''
+    def getAddItem_remainValues(self):
+        global addItem_placeMoney, addItem_amountMoney, addItem_commentMoney, addItem_fixedMoney
+
+        addItem_placeMoney = UI_set.LE_placeMoney.text()
+        addItem_amountMoney = UI_set.LE_amountMoeny.text()
+        addItem_commentMoney = UI_set.LE_commentMoney.text()
+
+        if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0 or addItem_categoryMoney == "카테고리":
+            if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0:
+                ErrorUI.LB_addError.setText("사용처 또는 금액 정보가 없습니다.")
+                ErrorUI.LB_addError.setStyleSheet("color: red; font-size: 20px")
+            else:
+                ErrorUI.LB_addError.setText("")
+            if addItem_categoryMoney == "카테고리":
+                ErrorUI.LB_categoryError.setText("카테고리를 지정해주세요.")
+                ErrorUI.LB_categoryError.setStyleSheet("color: red; font-size: 20px")
+            else:
+                ErrorUI.LB_categoryError.setText("")
+
+            ErrorUI.show()
+
+    '''
+        #. Name: closeError()
+        #. Feature
+            (1) ErrorUI를 닫음
+    '''
+    def closeError(self):
+        ErrorUI.close()
+
+
 def resource_path(relative_path): #안녕
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
@@ -150,8 +256,8 @@ if __name__ == '__main__':
     UI_set.CB_fixEPCategory  <- 전체 출납목록 Tab에 존재하는 QComboBox
     UI_set.CB_fixIncomeCategory  <- 전체 출납목록 Tab에 존재하는 QComboBox
     UI_set.CB_fixEPCategory_2  <- 지출 Tab에 존재하는 QComboBox
-    UI_set.CB_typeOfMoney  <- 항목추가 Group에 존재하는 QComboBox
-    UI_set.CB_categoryItem <- 항목추가 Group에 존재하는 QComboBox
+    UI_set.CB_typeMoney  <- 항목추가 Group에 존재하는 QComboBox
+    UI_set.CB_categoryMoney <- 항목추가 Group에 존재하는 QComboBox
 
 <RadioButton>
     UI_set.RB_viewByPeriod  <- 조회방법에 존재하는 QRadioBox
@@ -163,7 +269,7 @@ if __name__ == '__main__':
 <DateEdit>
     UI_set.DE_periodStartDay  <- 기간 조회방식으로 특정 기간(Period)의 시작일을 선택하는 QDateEdit
     UI_set.DE_periodEndDay  <- 기간 조회방식으로 특정 기간(Period)의 종료일을 선택하는 QDateEdit
-    UI_set.DE_flowDate  <- 항목추가 Group에 존재하는 QDateEdit
+    UI_set.DE_dateMoney  <- 항목추가 Group에 존재하는 QDateEdit
 
 <TextBrowser>
     UI_set.TB_displayTips  <- 사용자 지출, 수입 내역을 기반으로한 재무관리 TIP 제공하는 QTextBrowser
@@ -173,9 +279,9 @@ if __name__ == '__main__':
     BT_addItem  <- 항목추가 Group에 존재하는 QPushButton
 
 <LineEdit>
-    UI_set.LE_usePlace  <- 항목추가 Group에 존재하는 QLineEdit
-    UI_set.LE_amountOfMoeny  <- 항목추가 Group에 존재하는 QLineEdit
-    UI_set.LE_comment  <- 항목추가 Group에 존재하는 QLineEdit
+    UI_set.LE_placeMoney  <- 항목추가 Group에 존재하는 QLineEdit
+    UI_set.LE_amountMoney  <- 항목추가 Group에 존재하는 QLineEdit
+    UI_set.LE_commentMoney  <- 항목추가 Group에 존재하는 QLineEdit
     UI_set.LE_moneyState  <- 한달 재무현황 표시 QLineEdit
     UI_set.LE_dayState  <- 하루 재무현황 표시 QLineEdit
 '''

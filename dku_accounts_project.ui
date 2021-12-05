@@ -23,7 +23,7 @@
    <enum>QTabWidget::Triangular</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_14">
+   <layout class="QVBoxLayout" name="verticalLayout_15">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="3,2">
       <item>
@@ -648,7 +648,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="CB_typeOfMoney">
+                <widget class="QComboBox" name="CB_typeMoney">
                  <item>
                   <property name="text">
                    <string>지출</string>
@@ -673,7 +673,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QDateEdit" name="DE_flowDate">
+                <widget class="QDateEdit" name="DE_dateMoney">
                  <property name="dateTime">
                   <datetime>
                    <hour>0</hour>
@@ -698,7 +698,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="CB_categoryItem">
+                <widget class="QComboBox" name="CB_categoryMoney">
                  <item>
                   <property name="text">
                    <string>카테고리</string>
@@ -757,7 +757,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="LE_usePlace">
+                <widget class="QLineEdit" name="LE_placeMoney">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -787,7 +787,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="LE_amountOfMoeny">
+                <widget class="QLineEdit" name="LE_amountMoeny">
                  <property name="maximumSize">
                   <size>
                    <width>150</width>
@@ -811,7 +811,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="LE_comment">
+                <widget class="QLineEdit" name="LE_commentMoney">
                  <property name="maximumSize">
                   <size>
                    <width>150</width>
@@ -825,17 +825,28 @@
             </layout>
            </item>
            <item>
-            <widget class="QPushButton" name="BT_addItem">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>항목추가</string>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_14">
+             <item>
+              <widget class="QCheckBox" name="CH_fixedMoney">
+               <property name="text">
+                <string>고정지출</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="BT_addItem">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>항목추가</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
