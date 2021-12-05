@@ -206,6 +206,7 @@ class MainView(QMainWindow):
         addItem_placeMoney = UI_set.LE_placeMoney.text()
         addItem_amountMoney = UI_set.LE_amountMoeny.text()
         addItem_commentMoney = UI_set.LE_commentMoney.text()
+        addItem_fixedMoney = UI_set.CH_fixedMoney.isChecked()
 
         if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0 or addItem_categoryMoney == "카테고리":
             if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0:
