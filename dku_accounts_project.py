@@ -3,6 +3,7 @@ import os, os.path
 import pandas as pd
 import datetime
 from PySide2.QtCharts import *
+from PySide2.QtGui import QPainter, QPen
 from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
 
@@ -103,9 +104,8 @@ class MainView(QMainWindow):
         ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon.png")))
         ErrorUI.resize(450, 200)
 
-        # self.ComparisonST_UIOperation();
+        self.ComparisonST_UIOperation();
 
-    '''
     def ComparisonST_UIOperation(self):
         global ComparisonSTUI
 
@@ -118,13 +118,14 @@ class MainView(QMainWindow):
 
         chart = QtCharts.QChart()
         chart.addSeries(series)
-        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setAnimationOptions(SeriesAnimations)
         chart.setTitle("Test")
 
-        chartview = QChartView(chart)
+        chartview = QtCharts.QChartView(chart)
         chartview.setRenderHint(QPainter.Antialiasing)
 
-        ComparisonSTUI.setCentralWidget(chartview) '''
+        ComparisonSTUI.setCentralWidget(chartview)
+        ComparisonSTUI.show()
 
     '''
         #. Name: EnableViewDay()
