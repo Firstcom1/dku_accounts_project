@@ -118,7 +118,7 @@ class MainView(QMainWindow):
 
         chart = QtCharts.QChart()
         chart.addSeries(series)
-        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setAnimationOptions(QtCharts.QChart.SeriesAnimations)
         chart.setTitle("Test")
 
         chartview = QtCharts.QChartView(chart)
