@@ -1,6 +1,7 @@
 import sys
 import os, os.path
 import pandas as pd
+import matplotlib as plt
 import datetime
 from PySide2.QtCharts import *
 from PySide2.QtGui import QPainter, QPen
@@ -49,6 +50,7 @@ class MainView(QMainWindow):
     def setupUI(self):
         global UI_set, ErrorUI, ComparisonSTUI
         global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
+        global file_path; file_path="./accounts_data.csv"
         UI_set = QtUiTools.QUiLoader().load(resource_path("./dku_accounts_project.ui"))
         ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
         ComparisonSTUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
@@ -155,8 +157,18 @@ class MainView(QMainWindow):
         '''
     def toDataFile(self):
         df1=pd.read_csv(file_path)
-
+        data={'mtype': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
+        df2 = df1.append(data, ignore_index=True)
+        df2.to_csv("accounts_data.csv")
         
+        '''
+        #. Name: checkStat()
+        #. Feature
+            (1) 데이터 분석을 위한 기초
+    '''
+    def checkStat(self):
+        self.stat=pd.read_csv("./가구당_월평균_가계수지.csv")
+    
     '''
         #. Name: getSelectedDay()
         #. Feature
