@@ -1,2 +1,6 @@
-date,type,number,age,percentage,income,grocery,hobby,life,education,etc
-"2021-03-04",whole,2.37,52.62,100,4728905,825326,247404,1047884,221198,202353
+category,expense
+grocery,825326
+hobby,247404
+life,1047884
+education,221198
+etc,202353
