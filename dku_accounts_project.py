@@ -35,14 +35,6 @@ addItem_amountMoney = 0 # dataType: Str
 addItem_commentMoney = 0 # dataType: Str
 addItem_fixedMoney = 0 # dataType: Bool
 
-#데이터 처리용 변수
-mtype = 0 # dataType: Str
-date = 0 # dataType: Str
-category = 0 # dataType: Str
-place = 0 # dataType: Str
-balance = 0 # dataType: Int
-comment = 0 # dataType: Str
-
 # "항목추가"에 필요한 정보들
 # 잠재적으로 데이터파일에 insert
 
@@ -211,6 +203,53 @@ class MainView(QMainWindow):
         plt.title('일반 가구 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
+        
+        '''
+            #. Name: cmpUserStat()
+            #. Feature
+                (1) 소득구간별, 카테고리별 지출 비율을 자신의 소비 습관과 비교
+                <<"나의 분야별 소비비율 비교하기 " 버튼을 눌렀을 때 발생하는 이벤트 함수>>
+        '''
+        def cmpUserStat(self):
+            self.checkStat()
+            stat1=pd.read_csv("./소득구간별_가구당_가계지출.csv")
+            stat2=pd.read_csv(file_path)
+            
+            #데이터 처리
+            df1=self.stat.iloc[1:145,[0,1,3]]
+            df1.set_index('가계지출항목별',inplace=True)
+            df2=df1.drop(['가구원수 (명)','가구주연령 (세)','가구분포 (%)','가계지출 (원)','소비지출 (원)','비소비지출 (원)'])
+            df2.rename({'01.식료품 · 비주류음료 (원)':'음식','02.주류 · 담배 (원)':'음식','03.의류 · 신발 (원)':'취미','04.주거 · 수도 · 광열 (원)':
+            '생활','05.가정용품 · 가사서비스 (원)':'생활','06.보건 (원)':'생활','07.교통 (원)':'생활','08.통신 (원)':'생활','09.오락 · 문화 (원)':'취미','10.교육 (원)':'공부','11.음식 · 숙박 (원)':'음식','12.기타상품 · 서비스 (원)':'기타'},inplace=True)
+            df2.reset_index(inplace=True)
+            
+            #데이터 처리(사용자)
+            df3=stat2.iloc[:,[0,1,2,4]]
+            df3.set_index('category',inplace=True)
+            df4=df3.loc[df3['type']=="지출"]
+            df4.reset_index(inplace=True)
+
+            #그래프 객체 생성(서브 2개)
+            fig=plt.figure(figsize=(10,10))
+            ax1=fig.add_subplot(2,1,1)
+            ax2=fig.add_subplot(2,1,2)
+            
+            #ax객체로 그래프 2개 그리기(bar(x,y)
+            #그래프 1
+            ax1.bar(df2['소득계층별'],df2['2018'].sum(),width=0.3)
+            ax1.set_title('일반 가구 분야별 소비량')
+            #그래프2
+            ax2.bar(df4['category'],df4['balance'].sum(),width=0.4)
+            ax2.set_title('나의 분야별 소비량')
+            
+            #x축 눈금 표시
+            ax1.tick_params(axis="x",labelsize=7.5)
+
+            #y축 범위 지정
+            ax1.set_ylim(100000,5500000)
+            ax2.set_ylim(30000,1000000)
+
+            plt.show()
     
         '''
         #. Name: getSelectedDay()
