@@ -1,7 +1,7 @@
 import sys
 import os, os.path
 import datetime
-from PySide2 import QtUiTools, QtGui, QtCore
+from PySide2 import QtUiTools, QtGui, QtCore, QtCharts
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
 
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
@@ -39,6 +39,7 @@ class MainView(QMainWindow):
         global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
         UI_set = QtUiTools.QUiLoader().load(resource_path("./dku_accounts_project.ui"))
         ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
+        CompStatisticUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
 
         # TW(TableWidget)의 열_헤더부분 활성화
         UI_set.TW_displayAllAccounts.horizontalHeader().setVisible(True)
@@ -90,6 +91,8 @@ class MainView(QMainWindow):
         ErrorUI.setWindowTitle("Error")
         ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
         ErrorUI.resize(450, 200)
+
+    def ComparisonST_UIOperation(self):
 
     '''
         #. Name: EnableViewDay()
