@@ -7,6 +7,9 @@ from PySide2.QtGui import QPainter, QPen
 from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
 
+categoryExp = ['기타', '음식', '공부', '취미', '생활'] # dataType: List
+categoryIncome = ['경상소득', '비경상소득'] # dataType: List
+
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
 selectedDay_day = 0 # dataType: Int, form: 5
 selectedDay_month = 0 # dataType:Int, form: 12
@@ -124,7 +127,8 @@ class MainView(QMainWindow):
         chartview = QtCharts.QChartView(chart)
         chartview.setRenderHint(QPainter.Antialiasing)
 
-        ComparisonSTUI.setCentralWidget(chartview)
+        ComparisonSTUI.TAB_cmpExpWay.insertTab(0, chartview, "카테고리별")
+        ComparisonSTUI.TAB_cmpExpWay.insertTab(1, QTableWidget(), "대한민국 평균지출")
         ComparisonSTUI.show()
 
     '''
@@ -295,14 +299,14 @@ if __name__ == '__main__':
     UI_set.TW_displayIncome  <- 수입 Tab에 존재하는 QTableWidget
 
 <CheckBox>
-    UI_set.CH_fixEPCategory  <- 전체 출납목록 Tab에 존재하는 QCheckBox
+    UI_set.CH_fixExpCategory  <- 전체 출납목록 Tab에 존재하는 QCheckBox
     UI_set.CH_fixIncomCategory  <- 전체 출납목록 Tab에 존재하는 QCheckBox
-    UI_set.CH_fixEPCategory_2  <- 지출 Tab에 존재하는 QCheckBox
+    UI_set.CH_fixExpCategory_2  <- 지출 Tab에 존재하는 QCheckBox
 
 <ComboBox>
-    UI_set.CB_fixEPCategory  <- 전체 출납목록 Tab에 존재하는 QComboBox
+    UI_set.CB_fixExpCategory  <- 전체 출납목록 Tab에 존재하는 QComboBox
     UI_set.CB_fixIncomeCategory  <- 전체 출납목록 Tab에 존재하는 QComboBox
-    UI_set.CB_fixEPCategory_2  <- 지출 Tab에 존재하는 QComboBox
+    UI_set.CB_fixExpCategory_2  <- 지출 Tab에 존재하는 QComboBox
     UI_set.CB_typeMoney  <- 항목추가 Group에 존재하는 QComboBox
     UI_set.CB_categoryMoney <- 항목추가 Group에 존재하는 QComboBox
 

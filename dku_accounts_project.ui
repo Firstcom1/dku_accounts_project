@@ -37,7 +37,7 @@
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <property name="iconSize">
            <size>
@@ -58,14 +58,14 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout">
                 <item>
-                 <widget class="QCheckBox" name="CH_fixEPCategory">
+                 <widget class="QCheckBox" name="CH_fixExpCategory">
                   <property name="text">
                    <string>지출 카테고리 지정</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixEPCategory">
+                 <widget class="QComboBox" name="CB_fixExpCategory">
                   <item>
                    <property name="text">
                     <string>카테고리</string>
@@ -287,14 +287,14 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
                 <item>
-                 <widget class="QCheckBox" name="CH_fixEPCategory_2">
+                 <widget class="QCheckBox" name="CH_fixExpCategory_2">
                   <property name="text">
                    <string>지출 카테고리 지정</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixEPCategory_2">
+                 <widget class="QComboBox" name="CB_fixExpCategory_2">
                   <item>
                    <property name="text">
                     <string>카테고리</string>
@@ -701,7 +701,7 @@
                 <widget class="QComboBox" name="CB_categoryMoney">
                  <item>
                   <property name="text">
-                   <string>카테고리</string>
+                   <string>지출 카테고리</string>
                   </property>
                  </item>
                  <item>
@@ -717,6 +717,11 @@
                  <item>
                   <property name="text">
                    <string>취미</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>생활</string>
                   </property>
                  </item>
                  <item>
