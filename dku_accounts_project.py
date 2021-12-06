@@ -1,5 +1,6 @@
 import sys
 import os, os.path
+import pandas as pd
 import datetime
 from PySide2.QtCharts import *
 from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
@@ -27,6 +28,15 @@ addItem_placeMoney = 0 # dataType: Str
 addItem_amountMoney = 0 # dataType: Str
 addItem_commentMoney = 0 # dataType: Str
 addItem_fixedMoney = 0 # dataType: Bool
+
+#데이터 처리용 변수
+mtype = 0 # dataType: Str
+date = 0 # dataType: Str
+category = 0 # dataType: Str
+place = 0 # dataType: Str
+balance = 0 # dataType: Int
+comment = 0 # dataType: Str
+
 # "항목추가"에 필요한 정보들
 # 잠재적으로 데이터파일에 insert
 
@@ -136,6 +146,16 @@ class MainView(QMainWindow):
         UI_set.DE_periodStartDay.setEnabled(1)
         UI_set.DE_periodEndDay.setEnabled(1)
 
+        
+        '''
+            #. Name: totDataFile()
+            #. Feature
+                (1) 사용자 입력 데이터 csv 파일(file_path)에 저장
+        '''
+    def toDataFile(self):
+        df1=pd.read_csv(file_path)
+
+        
     '''
         #. Name: getSelectedDay()
         #. Feature
