@@ -7,6 +7,7 @@ from PySide2.QtCharts import *
 from PySide2.QtGui import QPainter, QPen
 from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
+from matplotlib import font_manager,rc
 
 categoryExp = ['기타', '음식', '공부', '취미', '생활'] # dataType: List
 categoryIncome = ['경상소득', '비경상소득'] # dataType: List
@@ -152,7 +153,6 @@ class MainView(QMainWindow):
         UI_set.CW_selectDay.setEnabled(0)
         UI_set.DE_periodStartDay.setEnabled(1)
         UI_set.DE_periodEndDay.setEnabled(1)
-
         
         '''
             #. Name: totDataFile()
@@ -169,17 +169,56 @@ class MainView(QMainWindow):
         #. Name: checkStat()
         #. Feature
             (1) 데이터 분석을 위한 기초
-    '''
+        '''
     def checkStat(self):
         self.stat=pd.read_csv("./가구당_월평균_가계수지.csv")
+        # 한글 폰트 설정
+        font_path = './malgun.ttf'
+        font_name = font_manager.FontProperties(fname=font_path).get_name()
+        rc('font', family=font_name)
     
-    '''
+   '''
+            #. Name: getUserCategoryChart()
+            #. Feature
+                (1) 사용자의 카테고리별 지출 비율 출력
+                <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수 : 이벤트 추가(필요)>>
+   '''
+    def getUserCategoryChart(self):
+        self.checkStat()
+        try:
+            rate=self.stat.groupby('category').sum()
+            rate.index = ['음식', '취미', '생활', '공부', '기타']
+        finally:
+            rate['balance'].plot(
+            kind='pie', autopct="%1.1f%%", startangle=10  # 어떤 그래프에 그림을 그릴지 지정
+    )
+    plt.title('나의 분야별 지출 비율', size=14)
+    plt.axis('equal')
+    plt.show()
+        
+        '''
+            #. Name: getHouseCategoryChart()
+            #. Feature
+                (1) 일반 가구들의 카테고리별 지출 비율을 보여줌으로써, 자신의 소비 비율 체크 가능
+                <<"분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수>>
+       '''
+    def getHouseCategoryChart(self):
+        self.checkStat()
+        self.stat.index = ['음식', '취미', '생활', '공부', '기타']
+        stat['expense'].plot(
+            kind='pie', autopct="%1.1f%%", startangle=10
+        )
+        plt.title('일반 가구 분야별 지출 비율', size=14)
+        plt.axis('equal')
+        plt.show()
+    
+        '''
         #. Name: getSelectedDay()
         #. Feature
             (1) 실행조건 : CalendarWidget에서 사용자가 특정 날짜를 선택했을 때
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year 에 해당 정보 저장
-    '''
+        '''
     def getSelectedDay(self):
         global selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year
         selectedDate = UI_set.CW_selectDay.selectedDate()
