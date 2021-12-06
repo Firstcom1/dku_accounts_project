@@ -706,27 +706,22 @@
                  </item>
                  <item>
                   <property name="text">
-                   <string>식사</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>간식</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>선물</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
                    <string>공부</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
+                   <string>음식</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
                    <string>취미</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>기타</string>
                   </property>
                  </item>
                 </widget>

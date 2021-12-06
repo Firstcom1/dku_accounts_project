@@ -1,8 +1,9 @@
 import sys
 import os, os.path
 import datetime
-from PySide2 import QtUiTools, QtGui, QtCore, QtCharts
-from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
+from PySide2.QtCharts import *
+from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
+from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
 
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
 selectedDay_day = 0 # dataType: Int, form: 5
@@ -35,11 +36,11 @@ class MainView(QMainWindow):
         self.setupUI()
 
     def setupUI(self):
-        global UI_set, ErrorUI
+        global UI_set, ErrorUI, ComparisonSTUI
         global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
         UI_set = QtUiTools.QUiLoader().load(resource_path("./dku_accounts_project.ui"))
         ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
-        CompStatisticUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
+        ComparisonSTUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
 
         # TW(TableWidget)의 열_헤더부분 활성화
         UI_set.TW_displayAllAccounts.horizontalHeader().setVisible(True)
@@ -84,15 +85,36 @@ class MainView(QMainWindow):
 
         self.setCentralWidget(UI_set)
         self.setWindowTitle("가계부")
-        self.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
+        self.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon.png")))
         self.resize(1300, 800)
         self.show()
 
         ErrorUI.setWindowTitle("Error")
-        ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon_accounts.png")))
+        ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon.png")))
         ErrorUI.resize(450, 200)
 
+        # self.ComparisonST_UIOperation();
+
+    '''
     def ComparisonST_UIOperation(self):
+        global ComparisonSTUI
+
+        series = QtCharts.QPieSeries()
+        series.append("Python", 80)
+        series.append("C++", 70)
+        series.append("Java", 50)
+        series.append("C#", 90)
+        series.append("PHP", 30)
+
+        chart = QtCharts.QChart()
+        chart.addSeries(series)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setTitle("Test")
+
+        chartview = QChartView(chart)
+        chartview.setRenderHint(QPainter.Antialiasing)
+
+        ComparisonSTUI.setCentralWidget(chartview) '''
 
     '''
         #. Name: EnableViewDay()
