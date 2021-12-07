@@ -14,20 +14,12 @@ font_path = './malgun.ttf'
 font_name = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font_name)
 
-categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타'] # dataType: List
-categoryIncome = ['수입 카테고리', '경상소득', '비경상소득'] # dataType: List
-
 stat = pd.read_csv("./가구당_월평균_가계수지.csv")
-stat1 = pd.read_csv("./소득구간별_가구당_가계지출.csv")
 stat2 = pd.read_csv("./accounts_data.csv")
-
-userDataFile = 0 # dataType: file, purpose: accounts_data.csv 파일 핸들링
 
 viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
 VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
 VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
-COL_DATE_IDX = 1 # dataType: Int, purpose: 상수 for "날짜" 필터링
-COL_CATEGORY_IDX = 2 # dataType: Int, purpose: 상수 for "카테고리" 필터링
 
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
 selectedDay_day = 0 # dataType: Int, form: 5
@@ -52,9 +44,6 @@ addItem_amountMoney = 0 # dataType: Str
 addItem_commentMoney = 0 # dataType: Str
 addItem_fixedMoney = 0 # dataType: Bool
 
-# "항목추가"에 필요한 정보들
-# 잠재적으로 데이터파일에 insert
-
 class MainView(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -71,9 +60,6 @@ class MainView(QMainWindow):
         global selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
         global periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
         global periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
-
-        self.openUserDataFile()
-        self.loadUserData_toTable()
 
         # TAB_displayType의 CB(ComboBox)_fixExpCategory 목록 작성
         UI_set.CB_fixExpCategory.addItems(categoryExp)
@@ -149,17 +135,13 @@ class MainView(QMainWindow):
         UI_set.BT_addItem.clicked.connect(self.getAddItem_remainValues)
 
         # BT(버튼): '재무관리 통계비교'를 누를 때 연결된 UI로 이동한다.
-
-        #UI_set.BT_compareByStatic.clicked.connect(self.popUpUi)
-
         UI_set.BT_compareByStatic.clicked.connect(self.popUpUi)
         
         #'나의 카테고리별 지출 비교'를 누를 때 이벤트 발생
         ComparisonSTUI.BT_compMyCategory.clicked.connect(self.getUserCategoryChart)
         
-        #'통계별 지출 비교' 누를 때 이벤트 발생
-        ComparisonSTUI.BT_compST.clicked.connect(self.getHouseCategoryChart)
-
+        #'나의 지출 비교 통계' 누를 때 이벤트 발생
+        ComparisonSTUI.BT_compST.clicked.connect(self.getBothCategoryChart)
 
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
@@ -180,69 +162,8 @@ class MainView(QMainWindow):
         #self.ComparisonST_UIOperation();
 
     def popUpUi(self):
-           ComparisonSTUI.show()
-
-    '''
-        #. Name: openUserDataFile()
-        #. Feature
-            (1) accounts_data.csv 파일 오픈
-            (2) 파일 디스크립터 userDataFile 획득
-    '''
-    def openUserDataFile(self):
-        global userDataFile
-        try:
-            userDataFile = open("accounts_data.csv", "rt+")
-        except:
-            sys.stderr.write("No file: %s\n" % "accounts_data.csv")
-            exit(1)
-
-    '''
-        #. Name: loadUserData_toTable()
-        #. Feature
-            (1) (전체 출납목록)TW(TableWidget)_displayAllAccounts에 accounts_data.csv에 존재하는 모든 데이터 출력
-            (2) (지출)TW(TableWidget)_displayExpenditure에 accounts_data.cvs 데이터 中 "지출"에 해당하는 데이터만 출력
-            (3) (수입)TW(TableWidget)_displayIncome에 accounts_data.cvs 데이터 中 "수입"에 해당하는 데이터만 출력
-            (4) (전체 출납목록)(지출)(수입) TW(TableWidget)데이터 날짜 필터링
-            (5) (전체 출납목록)(지출)(수입) TW(TableWidget)데이터 (지출)(수입)카테고리 필터링
-    '''
-    def loadUserData_toTable(self):
-        row = 0
-        col = 0
-
-        userDataFile.seek(0, 0)
-        userData = userDataFile.readlines()
-
-        UI_set.TW_displayAllAccounts.clearContents()
-        for i in range(len(userData)):
-            UI_set.TW_displayAllAccounts.removeRow(0)
-
-        for dataSet in userData:
-            dataFrag = dataSet.split(",")
-            dataFrag[-1].replace("\n", "")
-
-            if viewSelectedWay == None:
-                pass
-            elif viewSelectedWay == VIEW_ONEDAY:
-                if dataFrag[COL_DATE_IDX] != selectedDay_detail:
-                    continue
-                else:
-                    pass
-            elif viewSelectedWay == VIEW_PREIOD:
-
-
-            UI_set.TW_displayAllAccounts.insertRow(row)
-            for dataFragText in dataFrag:
-                UI_set.TW_displayAllAccounts.setItem(row, col, QTableWidgetItem(dataFragText))
-                col = col + 1
-            row = row + 1
-            col = 0
-
-        userDataFile.seek(0)
-
-
-        def popUpUi(self):
-            ComparisonSTUI.show()
-
+        ComparisonSTUI.show()
+        
     '''
         #. Name: EnableViewDay()
         #. Feature
@@ -257,8 +178,6 @@ class MainView(QMainWindow):
         UI_set.DE_periodStartDay.setEnabled(0)
         UI_set.DE_periodEndDay.setEnabled(0)
 
-        self.loadUserData_toTable()
-
     '''
         #. Name: EnableViewPeriod()
         #. Feature
@@ -272,102 +191,14 @@ class MainView(QMainWindow):
         UI_set.CW_selectDay.setEnabled(0)
         UI_set.DE_periodStartDay.setEnabled(1)
         UI_set.DE_periodEndDay.setEnabled(1)
-
-        self.loadUserData_toTable()
-
+        
         '''
             #. Name: totDataFile()
             #. Feature
                 (1) 사용자 입력 데이터 csv 파일에 저장
         '''
     def toDataFile(self):
-        data={'mtype': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
-        df = stat.append(data, ignore_index=True)
-        df.to_csv("accounts_data.csv")
-
-        '''
-            #. Name: getUserCategoryChart()
-            #. Feature
-                (1) 사용자의 카테고리별 지출 비율 출력
-                <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생>>
-        '''
-    def getUserCategoryChart(self):
-        try:
-            rate=stat.groupby('category').sum()
-            rate.index = ['음식', '취미', '생활', '공부', '기타']
-        finally:
-            rate['balance'].plot(
-            kind='pie', autopct="%1.1f%%", startangle=10  # 어떤 그래프에 그림을 그릴지 지정
-            )
-        plt.title('나의 분야별 지출 비율', size=14)
-        plt.axis('equal')
-        plt.show()
-
-        '''
-            #. Name: getHouseCategoryChart()
-            #. Feature
-                (1) 일반 가구들의 카테고리별 지출 비율을 보여줌으로써, 자신의 소비 비율 체크 가능
-                <<"분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수>>
-       '''
-    def getHouseCategoryChart(self):
-        stat.index = ['음식', '취미', '생활', '공부', '기타']
-        stat['expense'].plot(
-            kind='pie', autopct="%1.1f%%", startangle=10
-        )
-        plt.title('일반 가구 분야별 지출 비율', size=14)
-        plt.axis('equal')
-        plt.show()
-
-        '''
-            #. Name: cmpUserStat()
-            #. Feature
-                (1) 소득구간별, 카테고리별 지출 비율을 자신의 소비 습관과 비교
-                <<"나의 분야별 소비비율 비교하기 " 버튼을 눌렀을 때 발생하는 이벤트 함수>>
-        '''
-        def cmpUserStat(self):
-            #데이터 처리
-            df1=stat1.iloc[1:145,[0,1,3]]
-            df1.set_index('가계지출항목별',inplace=True)
-            df2=df1.drop(['가구원수 (명)','가구주연령 (세)','가구분포 (%)','가계지출 (원)','소비지출 (원)','비소비지출 (원)'])
-            df2.rename({'01.식료품 · 비주류음료 (원)':'음식','02.주류 · 담배 (원)':'음식','03.의류 · 신발 (원)':'취미','04.주거 · 수도 · 광열 (원)':
-            '생활','05.가정용품 · 가사서비스 (원)':'생활','06.보건 (원)':'생활','07.교통 (원)':'생활','08.통신 (원)':'생활','09.오락 · 문화 (원)':'취미','10.교육 (원)':'공부','11.음식 · 숙박 (원)':'음식','12.기타상품 · 서비스 (원)':'기타'},inplace=True)
-            df2.reset_index(inplace=True)
-
-            #데이터 처리(사용자)
-            df3=stat.iloc[:,[0,1,2,4]]
-            df3.set_index('category',inplace=True)
-            df4=df3.loc[df3['type']=="지출"]
-            df4.reset_index(inplace=True)
-
-            #그래프 객체 생성(서브 2개)
-            fig=plt.figure(figsize=(10,10))
-            ax1=fig.add_subplot(2,1,1)
-            ax2=fig.add_subplot(2,1,2)
-
-            #ax객체로 그래프 2개 그리기(bar(x,y)
-            #그래프 1
-            ax1.bar(df2['소득계층별'],df2['2018'].sum(),width=0.3)
-            ax1.set_title('일반 가구 분야별 소비량')
-            #그래프2
-            ax2.bar(df4['category'],df4['balance'].sum(),width=0.4)
-            ax2.set_title('나의 분야별 소비량')
-
-            #x축 눈금 표시
-            ax1.tick_params(axis="x",labelsize=7.5)
-
-            #y축 범위 지정
-            ax1.set_ylim(100000,5500000)
-            ax2.set_ylim(30000,1000000)
-
-            plt.show()
-
-        '''
-            #. Name: totDataFile()
-            #. Feature
-                (1) 사용자 입력 데이터 csv 파일에 저장
-        '''
-    def toDataFile(self):
-        data={'mtype': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
+        data={'type': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
         df = stat.append(data, ignore_index=True)
         df.to_csv("accounts_data.csv")
    
@@ -378,32 +209,48 @@ class MainView(QMainWindow):
                 <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생>>
         '''
     def getUserCategoryChart(self):
+        fig=plt.figure("나의 카테고리별 지출 비교")
+
         df = stat2.loc[stat2['type'] == "지출"]
         rate = df.groupby('category').sum()
-        wedgeprops={'width': 0.7, 'edgecolor': 'w', 'linewidth': 5}
+        wedgeprops = {'width': 0.7, 'edgecolor': 'w', 'linewidth': 5}
+        colors = ['#ff9999', '#ffc000', '#8fd9b6', '#d395d0', '#87CEFA']
+
         rate['balance'].plot(
-        kind='pie', autopct="%1.1f%%", startangle=10, wedgeprops=wedgeprops
+            kind='pie', autopct="%1.1f%%", startangle=10, wedgeprops=wedgeprops, colors=colors
         )
         plt.title('나의 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
         
         '''
-            #. Name: getHouseCategoryChart()
+            #. Name: getBothCategoryChart()
             #. Feature
-                (1) 일반 가구들의 카테고리별 지출 비율을 보여줌으로써, 자신의 소비 비율 체크 가능
-                <<"분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수>>
+                (1) 일반 가구들의 카테고리별 지출 비율을 보여줌으로써, 자신의 소비 비율 동시에 체크 가능
        '''
-    def getHouseCategoryChart(self):
-        stat.index = ['음식', '취미', '생활', '공부', '기타']
-        stat['expense'].plot(
-            kind='pie', autopct="%1.1f%%", startangle=10
-        )
-        plt.title('일반 가구 분야별 지출 비율', size=14)
+    def getBothCategoryChart(self):
+        fig = plt.figure("통계별 지출 비교",figsize=(10, 10))
+        ax1 = fig.add_subplot(2, 1, 1)
+        ax2 = fig.add_subplot(2, 1, 2)
+
+        df = stat2.loc[stat2['type'] == "지출"]
+        rate = df.groupby('category').sum()
+
+        labels1 = [x for x in set(stat2['category'])]
+        labels2 = [x for x in set(stat['category'])]
+        colors = ['#ff9999', '#ffc000', '#8fd9b6', '#d395d0', '#87CEFA']
+        wedgeprops = {'width': 0.7, 'edgecolor': 'w', 'linewidth': 5}
+
+        ax1.pie(rate['balance'], autopct="%1.1f%%", startangle=10, wedgeprops=wedgeprops, colors=colors)
+        ax1.legend(labels=labels1, loc='best')
+        ax1.set_title('나의 분야별 소비비율')
+        ax2.pie(stat['expense'], autopct="%1.1f%%", startangle=10, wedgeprops=wedgeprops, colors=colors)
+        ax2.legend(labels=labels2, loc='best')
+        ax2.set_title('일반 가구의 분야별 소비비율')
+
         plt.axis('equal')
         plt.show()
         
->>>>>>> b457b37a312859bc63f7fbcfc1a70ab1a6d59061
         '''
         #. Name: getSelectedDay()
         #. Feature
@@ -418,8 +265,6 @@ class MainView(QMainWindow):
         selectedDay_day = selectedDate.day()
         selectedDay_month = selectedDate.month()
         selectedDay_year = selectedDate.year()
-
-        self.loadUserData_toTable()
 
     '''
         #. Name: getPeriodStartDay()
@@ -436,8 +281,6 @@ class MainView(QMainWindow):
         periodStartDay_month = periodStartDay.month()
         periodStartDay_year = periodStartDay.year()
         print(periodStartDay_detail)
-
-        self.loadUserData_toTable()
 
     '''
         #. Name: getPeriodEndDay()
@@ -486,7 +329,7 @@ class MainView(QMainWindow):
     def getAddItem_dateMoney(self):
         global addItem_dateMoney
         addItem_date = UI_set.DE_dateMoney.date()
-        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.month()) + "-" + str(addItem_date.day())
+        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.money()) + "-" + str(addItem_date.day())
 
     '''
         #. Name: getAddItem_categoryMoney()
@@ -526,25 +369,6 @@ class MainView(QMainWindow):
                 ErrorUI.LB_categoryError.setText("")
 
             ErrorUI.show()
-
-        self.addItem_toFile();
-
-    def addItem_toFile(self):
-        addItem_dataFrag = list()
-        addItem_dataFrag.append(addItem_typeMoney)
-        addItem_dataFrag.append(addItem_dateMoney)
-        addItem_dataFrag.append(addItem_categoryMoney)
-        addItem_dataFrag.append(addItem_placeMoney)
-        addItem_dataFrag.append(addItem_amountMoney)
-        addItem_dataFrag.append(addItem_commentMoney + "\n")
-        getDataSet = ",".join(addItem_dataFrag)
-
-        print(getDataSet)
-
-        userDataFile.seek(0, 2)
-        userDataFile.write(getDataSet)
-
-        self.loadUserData_toTable()
 
     '''
         #. Name: closeError()
