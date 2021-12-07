@@ -12,6 +12,10 @@ from matplotlib import font_manager,rc
 categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타'] # dataType: List
 categoryIncome = ['수입 카테고리', '경상소득', '비경상소득'] # dataType: List
 
+viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
+VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
+VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
+
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
 selectedDay_day = 0 # dataType: Int, form: 5
 selectedDay_month = 0 # dataType:Int, form: 12
@@ -45,11 +49,25 @@ class MainView(QMainWindow):
 
     def setupUI(self):
         global UI_set, ErrorUI, ComparisonSTUI
-        global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
-        global file_path; file_path="./accounts_data.csv"
+
         UI_set = QtUiTools.QUiLoader().load(resource_path("./dku_accounts_project.ui"))
         ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
         ComparisonSTUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
+
+        global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
+        global selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
+        global periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
+        global periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
+
+        global file_path; file_path="./accounts_data.csv"
+
+        # TAB_displayType의 CB(ComboBox)_fixExpCategory 목록 작성
+        UI_set.CB_fixExpCategory.addItems(categoryExp)
+        UI_set.CB_fixExpCategory_2.addItems(categoryExp)
+
+        # TAB_displayType의 CB(ComboBox)_fixIncomeCategory 목록 작성
+        UI_set.CB_fixIncomeCategory.addItems(categoryIncome)
+        UI_set.CB_fixIncomeCategory_2.addItems(categoryIncome)
 
         # TW(TableWidget)의 열_헤더부분 활성화
         UI_set.TW_displayAllAccounts.horizontalHeader().setVisible(True)
@@ -66,10 +84,33 @@ class MainView(QMainWindow):
         UI_set.RB_viewByDay.clicked.connect(self.EnableViewDay)
 
         # 조회방법: "일별 조회"에서 사용자가 조회하고자 하는 특정한 날의 정보를 받아서 전역변수에 저장
+        # >>>> Part1: [일별 조회] Default값: 초기 설정값 받아오기
+        selectedDate = UI_set.CW_selectDay.selectedDate()
+        selectedDay_detail = str(selectedDate.year()) + "-" + str(selectedDate.month()) + "-" + str(selectedDate.day())
+        selectedDay_day = selectedDate.day()
+        selectedDay_month = selectedDate.month()
+        selectedDay_year = selectedDate.year()
+        # >>>> Part2: [일별 조회] Default값: 사용자 초기값 변경 시
         UI_set.CW_selectDay.clicked.connect(self.getSelectedDay)
 
-        # 조회방법: "기간별 조회"에서 "조회 시작일", "조회 종료일" 정보를 받아서 전역변수에 저장
+        # 조회방법: "기간별 조회"에서 "조회 시작일" 정보를 받아서 전역변수에 저장
+        # >>>> Part1: [조회 시작일] Default값: 초기 설정값 받아오기
+        periodStartDay = UI_set.DE_periodStartDay.date()
+        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(periodStartDay.day())
+        periodStartDay_day = periodStartDay.day()
+        periodStartDay_month = periodStartDay.month()
+        periodStartDay_year = periodStartDay.year()
+        # >>>> Part2: [조회 시작일] Default값: 사용자 초기값 변경 시
         UI_set.DE_periodStartDay.dateChanged.connect(self.getPeriodStartDay)
+
+        # 조회방법: "기간별 조회"에서 "조회 종료일" 정보를 받아서 전역변수에 저장
+        # >>>> Part1: [조회 종료일] Default값: 초기 설정값 받아오기
+        periodEndDay = UI_set.DE_periodEndDay.date()
+        periodEndDay_detail = str(periodEndDay.year()) + "-" + str(periodEndDay.month()) + "-" + str(periodEndDay.day())
+        periodEndDay_day = periodEndDay.day()
+        periodEndDay_month = periodEndDay.month()
+        periodEndDay_year = periodEndDay.year()
+        # >>>> Part2: [조회 종료일] Default값: 사용자 초기값 변경 시
         UI_set.DE_periodEndDay.dateChanged.connect(self.getPeriodEndDay)
 
         # 항목추가 中 "현금흐름 유형"에 대한 정보를 받아 전역변수에 저장
@@ -115,8 +156,12 @@ class MainView(QMainWindow):
         #. Name: EnableViewDay()
         #. Feature
             (1) 켈린더 위젯 활성화, 기간설정 DateEdit 위젯 비활성화
+            (2) viewSelectedWay값: VIEW_ONEDAY("일별 조회" 식별자)로 초기화 
     '''
     def EnableViewDay(self):
+        global viewSelectedWay, VIEW_ONEDAY
+        viewSelectedWay = VIEW_ONEDAY
+
         UI_set.CW_selectDay.setEnabled(1)
         UI_set.DE_periodStartDay.setEnabled(0)
         UI_set.DE_periodEndDay.setEnabled(0)
@@ -125,8 +170,12 @@ class MainView(QMainWindow):
         #. Name: EnableViewPeriod()
         #. Feature
             (1) 켈린더 위젯 비활성화, 기간설정 DateEdit 위젯 활성화
+            (2) viewSelectedWay값 초기화
     '''
     def EnableViewPeriod(self):
+        global viewSelectedWay, VIEW_PREIOD
+        viewSelectedWay = VIEW_PREIOD
+
         UI_set.CW_selectDay.setEnabled(0)
         UI_set.DE_periodStartDay.setEnabled(1)
         UI_set.DE_periodEndDay.setEnabled(1)
@@ -341,13 +390,13 @@ class MainView(QMainWindow):
         addItem_commentMoney = UI_set.LE_commentMoney.text()
         addItem_fixedMoney = UI_set.CH_fixedMoney.isChecked()
 
-        if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0 or addItem_categoryMoney == "카테고리":
+        if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0 or addItem_categoryMoney == "지출 카테고리" or addItem_categoryMoney == "수입 카테고리":
             if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0:
                 ErrorUI.LB_addError.setText("사용처 또는 금액 정보가 없습니다.")
                 ErrorUI.LB_addError.setStyleSheet("color: red; font-size: 20px")
             else:
                 ErrorUI.LB_addError.setText("")
-            if addItem_categoryMoney == "카테고리":
+            if addItem_categoryMoney == "지출 카테고리" or addItem_categoryMoney == "수입 카테고리":
                 ErrorUI.LB_categoryError.setText("카테고리를 지정해주세요.")
                 ErrorUI.LB_categoryError.setStyleSheet("color: red; font-size: 20px")
             else:
@@ -410,7 +459,7 @@ if __name__ == '__main__':
 
 <PushButton>
     UI_set.BT_compareByStatic  <- 통계자료로 사용자 데이터 기반 비교를 위한 UI표시 이벤트 발생 QPushButton
-    BT_addItem  <- 항목추가 Group에 존재하는 QPushButton
+    UI_set.BT_addItem  <- 항목추가 Group에 존재하는 QPushButton
 
 <LineEdit>
     UI_set.LE_placeMoney  <- 항목추가 Group에 존재하는 QLineEdit
@@ -418,4 +467,18 @@ if __name__ == '__main__':
     UI_set.LE_commentMoney  <- 항목추가 Group에 존재하는 QLineEdit
     UI_set.LE_moneyState  <- 한달 재무현황 표시 QLineEdit
     UI_set.LE_dayState  <- 하루 재무현황 표시 QLineEdit
+'''
+''' in addError.ui
+<LineEdit>
+    ErrorUI.LB_addError  <- 항목추가 中 "사용처", "금액" 부분이 비었을 때 발생하는 에러 문구 출력하는 QLineEdit
+    ErrorUI.LB_categoryError  <- 항목추가 中 "카테고리" 부분을 지정하지 않았을 때 발생하는 에러 문구 출력하는 QLineEdit
+    
+<PushButton>
+    ErrorUI.BT_close  <- "확인" 눌렀을 때 윈도우 닫는 QPushButton
+'''
+''' in comparsionST.ui
+
+<PushButton>
+    ComparisonUI.BT_compMyCategory  <- "나의 카테고리별 지출 비교" QPushButton
+    ComparisonUI.BT_compST  <- "통계별 지출 비교" QPushButton
 '''

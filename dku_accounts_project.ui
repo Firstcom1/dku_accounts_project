@@ -65,43 +65,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixExpCategory">
-                  <item>
-                   <property name="text">
-                    <string>카테고리</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>고정지출</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>간식</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>선물</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>공부</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>취미</string>
-                   </property>
-                  </item>
-                 </widget>
+                 <widget class="QComboBox" name="CB_fixExpCategory"/>
                 </item>
                 <item>
                  <widget class="QCheckBox" name="CH_fixIncomCategory">
@@ -111,38 +75,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixIncomeCategory">
-                  <item>
-                   <property name="text">
-                    <string>카테고리</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>간식</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>선물</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>공부</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>취미</string>
-                   </property>
-                  </item>
-                 </widget>
+                 <widget class="QComboBox" name="CB_fixIncomeCategory"/>
                 </item>
                 <item>
                  <spacer name="horizontalSpacer">
@@ -294,38 +227,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixExpCategory_2">
-                  <item>
-                   <property name="text">
-                    <string>카테고리</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>간식</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>선물</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>공부</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>취미</string>
-                   </property>
-                  </item>
-                 </widget>
+                 <widget class="QComboBox" name="CB_fixExpCategory_2"/>
                 </item>
                 <item>
                  <spacer name="horizontalSpacer_2">
@@ -465,38 +367,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixIncomeCategory_2">
-                  <item>
-                   <property name="text">
-                    <string>카테고리</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>간식</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>선물</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>공부</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>취미</string>
-                   </property>
-                  </item>
-                 </widget>
+                 <widget class="QComboBox" name="CB_fixIncomeCategory_2"/>
                 </item>
                 <item>
                  <spacer name="horizontalSpacer_3">
