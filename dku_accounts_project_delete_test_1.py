@@ -4,46 +4,47 @@ import pandas as pd
 import matplotlib as plt
 import sqlite3 as sq
 import datetime
-from PySide2.QtCharts import *
-from PySide2.QtGui import QPainter, QPen
-from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
-from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene, QAbstractItemView
-from matplotlib import font_manager,rc
+from PySide6.QtCharts import *
+from PySide6.QtGui import QPainter, QPen
+from PySide6 import QtUiTools, QtGui, QtCore, QtWidgets
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene, \
+    QAbstractItemView
+from matplotlib import font_manager, rc
 
-categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타'] # dataType: List
-categoryIncome = ['수입 카테고리', '경상소득', '비경상소득'] # dataType: List
+categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타']  # dataType: List
+categoryIncome = ['수입 카테고리', '경상소득', '비경상소득']  # dataType: List
 
-viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
-VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
-VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
+viewSelectedWay = None  # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
+VIEW_ONEDAY = 1  # dateType: Int, purpose: 상수 for "일별 조회" 식별
+VIEW_PREIOD = 2  # dateType: Int, purpose: 상수 for "기간 조회" 식별
 
-selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
-selectedDay_day = 0 # dataType: Int, form: 5
-selectedDay_month = 0 # dataType:Int, form: 12
-selectedDay_year = 0 # dataType: Int, form : 2021
+selectedDay_detail = 0  # dataType: Str, form: "2021-02-02"
+selectedDay_day = 0  # dataType: Int, form: 5
+selectedDay_month = 0  # dataType:Int, form: 12
+selectedDay_year = 0  # dataType: Int, form : 2021
 
-periodStartDay_detail = 0 # dataType: Str
-periodStartDay_day = 0 # dataType: Int
-periodStartDay_month = 0 # dataType: Int
-periodStartDay_year = 0 # dataType: Int
+periodStartDay_detail = 0  # dataType: Str
+periodStartDay_day = 0  # dataType: Int
+periodStartDay_month = 0  # dataType: Int
+periodStartDay_year = 0  # dataType: Int
 
-periodEndDay_detail = 0 # dataType: Str
-periodEndDay_day = 0 # dataType: Int
-periodEndDay_month = 0 # dataType: Int
-periodEndDay_year = 0 # dataType: Int
+periodEndDay_detail = 0  # dataType: Str
+periodEndDay_day = 0  # dataType: Int
+periodEndDay_month = 0  # dataType: Int
+periodEndDay_year = 0  # dataType: Int
 
-addItem_typeMoney = 0 # dataType: Str
-addItem_dateMoney = 0 # dataType: Str
-addItem_categoryMoney = 0 # dataType: Str
-addItem_placeMoney = 0 # dataType: Str
-addItem_amountMoney = 0 # dataType: Str
-addItem_commentMoney = 0 # dataType: Str
-addItem_fixedMoney = 0 # dataType: Bool
+addItem_typeMoney = 0  # dataType: Str
+addItem_dateMoney = 0  # dataType: Str
+addItem_categoryMoney = 0  # dataType: Str
+addItem_placeMoney = 0  # dataType: Str
+addItem_amountMoney = 0  # dataType: Str
+addItem_commentMoney = 0  # dataType: Str
+addItem_fixedMoney = 0  # dataType: Bool
 
 # "항목추가"에 필요한 정보들
 # 잠재적으로 데이터파일에 insert
 
-Databasename = "accounts_delete_2.db"
+Databasename = "accounts_delete_6.db"
 
 class MainView(QMainWindow):
     def __init__(self):
@@ -62,7 +63,8 @@ class MainView(QMainWindow):
         global periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
         global periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
 
-        global file_path; file_path="./accounts_data.csv"
+        global file_path;
+        file_path = "./accounts_data.csv"
 
         # TAB_displayType의 CB(ComboBox)_fixExpCategory 목록 작성
         UI_set.CB_fixExpCategory.addItems(categoryExp)
@@ -99,7 +101,8 @@ class MainView(QMainWindow):
         # 조회방법: "기간별 조회"에서 "조회 시작일" 정보를 받아서 전역변수에 저장
         # >>>> Part1: [조회 시작일] Default값: 초기 설정값 받아오기
         periodStartDay = UI_set.DE_periodStartDay.date()
-        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(periodStartDay.day())
+        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(
+            periodStartDay.day())
         periodStartDay_day = periodStartDay.day()
         periodStartDay_month = periodStartDay.month()
         periodStartDay_year = periodStartDay.year()
@@ -117,20 +120,22 @@ class MainView(QMainWindow):
         UI_set.DE_periodEndDay.dateChanged.connect(self.getPeriodEndDay)
 
         # 항목추가 中 "현금흐름 유형"에 대한 정보를 받아 전역변수에 저장
-        addItem_typeMoney = UI_set.CB_typeMoney.currentText() # Default값: "지출"
-        UI_set.CB_typeMoney.currentTextChanged.connect(self.getAddItem_typeMoney) # 변경되면 갱신, "고정지출" 라벨(LB) <-> "고정수입" 라벨(LB)
+        addItem_typeMoney = UI_set.CB_typeMoney.currentText()  # Default값: "지출"
+        UI_set.CB_typeMoney.currentTextChanged.connect(
+            self.getAddItem_typeMoney)  # 변경되면 갱신, "고정지출" 라벨(LB) <-> "고정수입" 라벨(LB)
 
         # 항목추가 中 "날짜"에 대한 정보를 받아 전역변수에 저장
         addItem_date = UI_set.DE_dateMoney.date()
-        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.month()) + "-" + str(addItem_date.day()) # Default값: "2021-12-01"
-        UI_set.DE_dateMoney.dateChanged.connect(self.getAddItem_dateMoney) # 변경되면 갱신
+        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.month()) + "-" + str(
+            addItem_date.day())  # Default값: "2021-12-01"
+        UI_set.DE_dateMoney.dateChanged.connect(self.getAddItem_dateMoney)  # 변경되면 갱신
 
         # 항목추가 中 "현금흐름 유형"의 기본값 "지출"에 따라 CB_categoryMoney를 categoryExp(지출 카테고리)로 초기화
         UI_set.CB_categoryMoney.addItems(categoryExp)
 
         # 항목추가 中 "카테고리"에 대한 정보를 받아 전역변수에 저장
         addItem_categoryMoney = UI_set.CB_categoryMoney.currentText()  # Default값: "카테고리"
-        UI_set.CB_categoryMoney.currentTextChanged.connect(self.getAddItem_categoryMoney) # 변경되면 갱신
+        UI_set.CB_categoryMoney.currentTextChanged.connect(self.getAddItem_categoryMoney)  # 변경되면 갱신
 
         # 항목추가 中 "항목추가" 버튼을 클릭했을 때 addItem_typeMoney, addItem_date, addItem_categoryMoney 이외에 나머지
         # addItem_placeMoney, addItem_amountMoney, addItem_commentMoney와 함께 데이터를 취합저장
@@ -139,20 +144,18 @@ class MainView(QMainWindow):
 
         # BT(버튼): '재무관리 통계비교'를 누를 때 연결된 UI로 이동한다.
 
-
-
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
 
         UI_set.BT_addItem.clicked.connect(insertData)
 
-        UI_set.TW_displayExpenditure.cellDoubleClicked.connect(DeleteData)
-
+        UI_set.TW_displayAllAccounts.cellDoubleClicked.connect(DeleteData)
         self.setTable()
 
         CreateTable()
 
         SelectData()
+
 
         self.setCentralWidget(UI_set)
         self.setWindowTitle("가계부")
@@ -163,21 +166,22 @@ class MainView(QMainWindow):
         ErrorUI.setWindowTitle("Error")
         ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon.png")))
         ErrorUI.resize(450, 200)
-        
+
         ComparisonSTUI.setWindowTitle("재무 관리 통계")
         ComparisonSTUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/dku.jpg")))
 
-        #self.ComparisonST_UIOperation();
+        # self.ComparisonST_UIOperation();
 
         def popUpUi(self):
             ComparisonSTUI.show()
-        
+
     '''
         #. Name: EnableViewDay()
         #. Feature
             (1) 켈린더 위젯 활성화, 기간설정 DateEdit 위젯 비활성화
             (2) viewSelectedWay값: VIEW_ONEDAY("일별 조회" 식별자)로 초기화 
     '''
+
     def EnableViewDay(self):
         global viewSelectedWay, VIEW_ONEDAY
         viewSelectedWay = VIEW_ONEDAY
@@ -192,6 +196,7 @@ class MainView(QMainWindow):
             (1) 켈린더 위젯 비활성화, 기간설정 DateEdit 위젯 활성화
             (2) viewSelectedWay값 초기화
     '''
+
     def EnableViewPeriod(self):
         global viewSelectedWay, VIEW_PREIOD
         viewSelectedWay = VIEW_PREIOD
@@ -199,55 +204,60 @@ class MainView(QMainWindow):
         UI_set.CW_selectDay.setEnabled(0)
         UI_set.DE_periodStartDay.setEnabled(1)
         UI_set.DE_periodEndDay.setEnabled(1)
-        
+
         '''
             #. Name: totDataFile()
             #. Feature
                 (1) 사용자 입력 데이터 csv 파일(file_path)에 저장
         '''
+
     def toDataFile(self):
-        df1=pd.read_csv(file_path)
-        data={'mtype': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
+        df1 = pd.read_csv(file_path)
+        data = {'mtype': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,
+                'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
         df2 = df1.append(data, ignore_index=True)
         df2.to_csv("accounts_data.csv")
-        
+
         '''
         #. Name: checkStat()
         #. Feature
             (1) 데이터 분석을 위한 기초
         '''
+
     def checkStat(self):
-        self.stat=pd.read_csv("./가구당_월평균_가계수지.csv")
+        self.stat = pd.read_csv("./가구당_월평균_가계수지.csv")
         # 한글 폰트 설정
         font_path = './malgun.ttf'
         font_name = font_manager.FontProperties(fname=font_path).get_name()
         rc('font', family=font_name)
-    
+
         '''
             #. Name: getUserCategoryChart()
             #. Feature
                 (1) 사용자의 카테고리별 지출 비율 출력
                 <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수 : 이벤트 추가(필요)>>
         '''
+
     def getUserCategoryChart(self):
         self.checkStat()
         try:
-            rate=self.stat.groupby('category').sum()
+            rate = self.stat.groupby('category').sum()
             rate.index = ['음식', '취미', '생활', '공부', '기타']
         finally:
             rate['balance'].plot(
-            kind='pie', autopct="%1.1f%%", startangle=10  # 어떤 그래프에 그림을 그릴지 지정
+                kind='pie', autopct="%1.1f%%", startangle=10  # 어떤 그래프에 그림을 그릴지 지정
             )
         plt.title('나의 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
-        
+
         '''
             #. Name: getHouseCategoryChart()
             #. Feature
                 (1) 일반 가구들의 카테고리별 지출 비율을 보여줌으로써, 자신의 소비 비율 체크 가능
                 <<"분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수>>
        '''
+
     def getHouseCategoryChart(self):
         self.checkStat()
         self.stat.index = ['음식', '취미', '생활', '공부', '기타']
@@ -264,46 +274,50 @@ class MainView(QMainWindow):
                 (1) 소득구간별, 카테고리별 지출 비율을 자신의 소비 습관과 비교
                 <<"나의 분야별 소비비율 비교하기 " 버튼을 눌렀을 때 발생하는 이벤트 함수>>
         '''
+
     def cmpUserStat(self):
-            self.checkStat()
-            stat1=pd.read_csv("./소득구간별_가구당_가계지출.csv")
-            stat2=pd.read_csv(file_path)
+        self.checkStat()
+        stat1 = pd.read_csv("./소득구간별_가구당_가계지출.csv")
+        stat2 = pd.read_csv(file_path)
 
-            #데이터 처리
-            df1=self.stat.iloc[1:145,[0,1,3]]
-            df1.set_index('가계지출항목별',inplace=True)
-            df2=df1.drop(['가구원수 (명)','가구주연령 (세)','가구분포 (%)','가계지출 (원)','소비지출 (원)','비소비지출 (원)'])
-            df2.rename({'01.식료품 · 비주류음료 (원)':'음식','02.주류 · 담배 (원)':'음식','03.의류 · 신발 (원)':'취미','04.주거 · 수도 · 광열 (원)':
-            '생활','05.가정용품 · 가사서비스 (원)':'생활','06.보건 (원)':'생활','07.교통 (원)':'생활','08.통신 (원)':'생활','09.오락 · 문화 (원)':'취미','10.교육 (원)':'공부','11.음식 · 숙박 (원)':'음식','12.기타상품 · 서비스 (원)':'기타'},inplace=True)
-            df2.reset_index(inplace=True)
-            
-            #데이터 처리(사용자)
-            df3=stat2.iloc[:,[0,1,2,4]]
-            df3.set_index('category',inplace=True)
-            df4=df3.loc[df3['type']=="지출"]
-            df4.reset_index(inplace=True)
+        # 데이터 처리
+        df1 = self.stat.iloc[1:145, [0, 1, 3]]
+        df1.set_index('가계지출항목별', inplace=True)
+        df2 = df1.drop(['가구원수 (명)', '가구주연령 (세)', '가구분포 (%)', '가계지출 (원)', '소비지출 (원)', '비소비지출 (원)'])
+        df2.rename({'01.식료품 · 비주류음료 (원)': '음식', '02.주류 · 담배 (원)': '음식', '03.의류 · 신발 (원)': '취미', '04.주거 · 수도 · 광열 (원)':
+            '생활', '05.가정용품 · 가사서비스 (원)': '생활', '06.보건 (원)': '생활', '07.교통 (원)': '생활', '08.통신 (원)': '생활',
+                    '09.오락 · 문화 (원)': '취미', '10.교육 (원)': '공부', '11.음식 · 숙박 (원)': '음식', '12.기타상품 · 서비스 (원)': '기타'},
+                   inplace=True)
+        df2.reset_index(inplace=True)
 
-            #그래프 객체 생성(서브 2개)
-            fig=plt.figure(figsize=(10,10))
-            ax1=fig.add_subplot(2,1,1)
-            ax2=fig.add_subplot(2,1,2)
-            
-            #ax객체로 그래프 2개 그리기(bar(x,y)
-            #그래프 1
-            ax1.bar(df2['소득계층별'],df2['2018'].sum(),width=0.3)
-            ax1.set_title('일반 가구 분야별 소비량')
-            #그래프2
-            ax2.bar(df4['category'],df4['balance'].sum(),width=0.4)
-            ax2.set_title('나의 분야별 소비량')
-            
-            #x축 눈금 표시
-            ax1.tick_params(axis="x",labelsize=7.5)
+        # 데이터 처리(사용자)
+        df3 = stat2.iloc[:, [0, 1, 2, 4]]
+        df3.set_index('category', inplace=True)
+        df4 = df3.loc[df3['type'] == "지출"]
+        df4.reset_index(inplace=True)
 
-            #y축 범위 지정
-            ax1.set_ylim(100000,5500000)
-            ax2.set_ylim(30000,1000000)
+        # 그래프 객체 생성(서브 2개)
+        fig = plt.figure(figsize=(10, 10))
+        ax1 = fig.add_subplot(2, 1, 1)
+        ax2 = fig.add_subplot(2, 1, 2)
 
-            plt.show()
+        # ax객체로 그래프 2개 그리기(bar(x,y)
+        # 그래프 1
+        ax1.bar(df2['소득계층별'], df2['2018'].sum(), width=0.3)
+        ax1.set_title('일반 가구 분야별 소비량')
+        # 그래프2
+        ax2.bar(df4['category'], df4['balance'].sum(), width=0.4)
+        ax2.set_title('나의 분야별 소비량')
+
+        # x축 눈금 표시
+        ax1.tick_params(axis="x", labelsize=7.5)
+
+        # y축 범위 지정
+        ax1.set_ylim(100000, 5500000)
+        ax2.set_ylim(30000, 1000000)
+
+        plt.show()
+
     '''
         #. Name: getSelectedDay()
         #. Feature
@@ -311,6 +325,7 @@ class MainView(QMainWindow):
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year 에 해당 정보 저장
         '''
+
     def getSelectedDay(self):
         global selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year
         selectedDate = UI_set.CW_selectDay.selectedDate()
@@ -326,10 +341,12 @@ class MainView(QMainWindow):
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year 에 해당 정보 저장
     '''
+
     def getPeriodStartDay(self):
         global periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year
         periodStartDay = UI_set.DE_periodStartDay.date()
-        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(periodStartDay.day())
+        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(
+            periodStartDay.day())
         periodStartDay_day = periodStartDay.day()
         periodStartDay_month = periodStartDay.month()
         periodStartDay_year = periodStartDay.year()
@@ -342,6 +359,7 @@ class MainView(QMainWindow):
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year 에 해당 정보 저장
     '''
+
     def getPeriodEndDay(self):
         global periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year
         periodEndDay = UI_set.DE_periodEndDay.date()
@@ -357,6 +375,7 @@ class MainView(QMainWindow):
             (1) 실행조건 : 사용자가 CB_typeMoney에서 "현금흐름 유형"을 변경했을 떄
             (2) 변경된 "현금흐름 유형" 사항을 갱신
     '''
+
     def getAddItem_typeMoney(self):
         global addItem_typeMoney
         addItem_typeMoney = UI_set.CB_typeMoney.currentText()
@@ -373,12 +392,14 @@ class MainView(QMainWindow):
             for i in range(len(categoryExp)):
                 UI_set.CB_categoryMoney.removeItem(0)
             UI_set.CB_categoryMoney.addItems(categoryIncome)
+
     '''
         #. Name: getAddItem_dateMoney()
         #. Feature
             (1) 실행조건 : 사용자가 DE_dateMoney에서 "날짜"를 변경했을 떄
             (2) 변경된 "날짜" 사항을 갱신
     '''
+
     def getAddItem_dateMoney(self):
         global addItem_dateMoney
         addItem_date = UI_set.DE_dateMoney.date()
@@ -390,6 +411,7 @@ class MainView(QMainWindow):
             (1) 실행조건 : 사용자가 CB_categoryMoney에서 "카테고리"를 변경했을 떄
             (2) 변경된 "카테고리" 사항을 갱신
     '''
+
     def getAddItem_categoryMoney(self):
         global addItem_categoryMoney
         addItem_categoryMoney = UI_set.CB_categoryMoney.currentText()
@@ -401,6 +423,7 @@ class MainView(QMainWindow):
             (2) 나머지 "사용처", "금액", "코멘트", "고정"여부를 받아와 전역변수에 저장
             (3) 만약 "사용처", "금액", "카테고리" 란이 비었으면 에러메세지를 띄움. -> 데이터파일 저장 거부
     '''
+
     def getAddItem_remainValues(self):
         global addItem_placeMoney, addItem_amountMoney, addItem_commentMoney, addItem_fixedMoney
 
@@ -409,7 +432,8 @@ class MainView(QMainWindow):
         addItem_commentMoney = UI_set.LE_commentMoney.text()
         addItem_fixedMoney = UI_set.CH_fixedMoney.isChecked()
 
-        if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0 or addItem_categoryMoney == "지출 카테고리" or addItem_categoryMoney == "수입 카테고리":
+        if len(addItem_placeMoney) == 0 or len(
+                addItem_amountMoney) == 0 or addItem_categoryMoney == "지출 카테고리" or addItem_categoryMoney == "수입 카테고리":
             if len(addItem_placeMoney) == 0 or len(addItem_amountMoney) == 0:
                 ErrorUI.LB_addError.setText("사용처 또는 금액 정보가 없습니다.")
                 ErrorUI.LB_addError.setStyleSheet("color: red; font-size: 20px")
@@ -428,48 +452,52 @@ class MainView(QMainWindow):
         #. Feature
             (1) ErrorUI를 닫음
     '''
+
     def closeError(self):
         ErrorUI.close()
 
     def setTable(self):
-     # Table 가로(column) 갯수
-     UI_set.TW_displayExpenditure.setColumnCount(8)
+        # Table 가로(column) 갯수
+        UI_set.TW_displayAllAccounts.setColumnCount(8)
 
-     # Table 읽기전용
-     UI_set.TW_displayExpenditure.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-     # Table 칼럼 헤더 라벨
-     UI_set.TW_displayExpenditure.setHorizontalHeaderLabels(['', '현금흐름 유형', '날짜', '카테고리', '사용처', '금액', '코멘트',''])
+        # Table 읽기전용
+        UI_set.TW_displayAllAccounts.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        # Table 칼럼 헤더 라벨
+        UI_set.TW_displayAllAccounts.setHorizontalHeaderLabels(['', '현금흐름 유형', '날짜', '카테고리', '사용처', '금액', '코멘트', ''])
+
 
 def CreateTable():
-    # sqlite3 db 파일 접속, 없으면 생성
-    conn = sq.connect(Databasename)
-    cur = conn.cursor()
+        # sqlite3 db 파일 접속, 없으면 생성
+        conn = sq.connect(Databasename)
+        cur = conn.cursor()
 
-    # db에 aaa라는 테이블이 있는지 sqlite3의 마스터 테이블에서 정보를 받아온다.
-    sql = "SELECT name FROM sqlite_master WHERE type='table' AND name ='aaa'"
-    cur.execute(sql)
-    rows = cur.fetchall()
-
-    # aaa 테이블이 없으면 새로 생성하고,  있으면 통과
-    if not rows:
-        sql = "CREATE TABLE aaa (idx INTEGER PRIMARY KEY, placeMoney TEXT, amountMoeny INTEGER, commentMoney TEXT)"
+        # db에 aaa라는 테이블이 있는지 sqlite3의 마스터 테이블에서 정보를 받아온다.
+        sql = "SELECT name FROM sqlite_master WHERE type='table' AND name ='aaa'"
         cur.execute(sql)
-        conn.commit()
+        rows = cur.fetchall()
 
-    conn.close()
+        # aaa 테이블이 없으면 새로 생성하고,  있으면 통과
+        if not rows:
+            sql = "CREATE TABLE aaa (idx INTEGER PRIMARY KEY,typeMoney TEXT, dateMoney TEXT, categoryMoney TEXT, placeMoney TEXT, amountMoeny INTEGER,commentMoney TEXT)"
+            cur.execute(sql)
+            conn.commit()
+
+        conn.close()
 
 
 def insertData():
-
+    typeMoney = UI_set.CB_typeMoney.currentText()
+    dateMoney = UI_set.DE_dateMoney.text()
+    categoryMoney = UI_set.CB_categoryMoney.currentText()
     placeMoney = UI_set.LE_placeMoney.text()
     amountMoeny = UI_set.LE_amountMoeny.text()
     commentMoney = UI_set.LE_commentMoney.text()
     conn = sq.connect(Databasename)
     cur = conn.cursor()
-
-    sql = "INSERT INTO aaa (  placeMoney, amountMoeny, commentMoney) VALUES (?,?,?)"
-    cur.execute(sql, ( placeMoney, amountMoeny, commentMoney))
+    sql = "INSERT INTO aaa (typeMoney, dateMoney, categoryMoney, placeMoney, amountMoeny, commentMoney) VALUES (?,?,?,?,?,?)"
+    cur.execute(sql, (typeMoney, dateMoney, categoryMoney, placeMoney, amountMoeny, commentMoney))
     conn.commit()
 
     conn.close()
@@ -487,7 +515,7 @@ def DeleteData(row, column):
         cur = conn.cursor()
 
         # DB의 데이터 idx는 선택한 Row의 첫번째 셀(0번 Column)의 값에 해당한다.
-        idx = UI_set.TW_displayExpenditure.item(row, 0).text()
+        idx = UI_set.TW_displayAllAccounts.item(row, 0).text()
 
         sql = "DELETE FROM aaa WHERE idx =?"
         cur.execute(sql, (idx,))
@@ -519,26 +547,36 @@ def setTables(row):
     count = len(row)
 
     # 갯수만큼 테이블의 Row를 생성한다.
-    UI_set.TW_displayExpenditure.setRowCount(count)
+    UI_set.TW_displayAllAccounts.setRowCount(count)
 
     # row 리스트만큼 반복하며 Table에 DB 값을 넣는다.
     for x in range(count):
         # 리스트 내부의 column쌍은 튜플로 반환하므로 튜플의 각 값을 변수에 저장
-        idx, placeMoney, amountMoeny, commentMoney = row[x]
+        idx, typeMoney, dateMoney, categoryMoney, placeMoney, amountMoeny, commentMoney = row[x]
 
         # 테이블의 각 셀에 값 입력
-        UI_set.TW_displayExpenditure.setItem(x, 0, QTableWidgetItem(str(idx)))
+        UI_set.TW_displayAllAccounts.setItem(x, 0, QTableWidgetItem(str(idx)))
+        UI_set.TW_displayAllAccounts.setItem(x, 1, QTableWidgetItem(typeMoney))
+        UI_set.TW_displayAllAccounts.setItem(x, 2, QTableWidgetItem(dateMoney))
+        UI_set.TW_displayAllAccounts.setItem(x, 3, QTableWidgetItem(categoryMoney))
+        UI_set.TW_displayAllAccounts.setItem(x, 4, QTableWidgetItem(placeMoney))
+        UI_set.TW_displayAllAccounts.setItem(x, 5, QTableWidgetItem(str(amountMoeny)))
+        UI_set.TW_displayAllAccounts.setItem(x, 6, QTableWidgetItem(commentMoney))
+        UI_set.TW_displayAllAccounts.setItem(x, 7, QTableWidgetItem("삭제"))
 
-        UI_set.TW_displayExpenditure.setItem(x, 4, QTableWidgetItem(placeMoney))
-        UI_set.TW_displayExpenditure.setItem(x, 5, QTableWidgetItem(str(amountMoeny)))
-        UI_set.TW_displayExpenditure.setItem(x, 6, QTableWidgetItem(commentMoney))
-        UI_set.TW_displayExpenditure.setItem(x, 7, QTableWidgetItem("삭제"))
 
 
-def resource_path(relative_path): #안녕
+
+
+
+
+
+
+def resource_path(relative_path):  # 안녕
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -594,7 +632,7 @@ if __name__ == '__main__':
 <LineEdit>
     ErrorUI.LB_addError  <- 항목추가 中 "사용처", "금액" 부분이 비었을 때 발생하는 에러 문구 출력하는 QLineEdit
     ErrorUI.LB_categoryError  <- 항목추가 中 "카테고리" 부분을 지정하지 않았을 때 발생하는 에러 문구 출력하는 QLineEdit
-    
+
 <PushButton>
     ErrorUI.BT_close  <- "확인" 눌렀을 때 윈도우 닫는 QPushButton
 '''
