@@ -109,28 +109,7 @@ class MainView(QMainWindow):
         ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon.png")))
         ErrorUI.resize(450, 200)
 
-        self.ComparisonST_UIOperation();
-
-    def ComparisonST_UIOperation(self):
-        global ComparisonSTUI
-
-        series = QtCharts.QPieSeries()
-        series.append("Python", 80)
-        series.append("C++", 70)
-        series.append("Java", 50)
-        series.append("C#", 90)
-        series.append("PHP", 30)
-
-        chart = QtCharts.QChart()
-        chart.addSeries(series)
-        chart.setAnimationOptions(QtCharts.QChart.SeriesAnimations)
-        chart.setTitle("Test")
-
-        chartview = QtCharts.QChartView(chart)
-        chartview.setRenderHint(QPainter.Antialiasing)
-
-        ComparisonSTUI.TAB_cmpExpWay.insertTab(0, chartview, "카테고리별")
-        ComparisonSTUI.show()
+        #self.ComparisonST_UIOperation();
 
     '''
         #. Name: EnableViewDay()
