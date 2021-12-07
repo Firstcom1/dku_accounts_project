@@ -2,7 +2,7 @@ import sys, random
 import os, os.path
 import pandas as pd
 import matplotlib.pyplot as plt
-import datetime
+from datetime import datetime
 from PySide2.QtCharts import *
 from PySide2.QtGui import QPainter, QPen
 from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
@@ -13,6 +13,12 @@ from matplotlib import font_manager,rc
 font_path = './malgun.ttf'
 font_name = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font_name)
+
+categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타']  # dataType: List
+categoryIncome = ['수입 카테고리', '경상소득', '비경상소득']  # dataType: List
+
+today=datetime.today().day #현재 일 , dataType: Int
+now_month=datetime.today().month #현재 달, dataType: Int
 
 stat = pd.read_csv("./가구당_월평균_가계수지.csv")
 stat2 = pd.read_csv("./accounts_data.csv")
@@ -44,13 +50,15 @@ addItem_amountMoney = 0 # dataType: Str
 addItem_commentMoney = 0 # dataType: Str
 addItem_fixedMoney = 0 # dataType: Bool
 
-total_income=0 #dataType: Int
-total_expd=0 #dataType: Int
+m_total_income=0 #dataType: Int, 한달 수입
+m_total_expd=0 #dataType: Int, 한달 지출
+d_total_expd=0 #dataType: Int, 하루 지출
 
 class MainView(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUI()
+        self.printMonth()
 
     def setupUI(self):
         global UI_set, ErrorUI, ComparisonSTUI
@@ -195,7 +203,30 @@ class MainView(QMainWindow):
             (1) 총 수입, 총 지출량 갱신
         '''
     def reNewData(self):
-        pass  
+        stat2=pd.read_csv("./accounts_data.csv")
+        total_income=stat2.loc[(stat2['type']=='수입') & (str(now_month) in stat2["date"]),"balance"].sum()
+        m_total_expd = stat2.loc[(stat2['type'] == '지출') & (str(now_month) in stat2["date"]), "balance"].sum() #한달 지출합계
+        d_total_expd=stat2.loc[(stat2['type'] == '지출') & ( str(today) in stat2["date"]), "balance"].sum() #하루 지출합계  
+      
+     '''
+        #. Name: printMonth()
+        #. Feature
+            (1) 재무 현황에 무슨 달인지 프린트
+    '''
+    
+    def printMonth(self):
+        UI_set.LB_monthState.setText("%d월 한달 재무현황" %now_month)
+
+    '''
+        #. Name: printMoneyState()
+        #. Feature
+            (1) 재무 현황에 텍스트 프린트
+    '''
+
+    def printMoneyState(self):
+        UI_set.LE_moneyState.setText("수입합계[%d] - 지출합계[%d] = %d(원)" %(total_income,m_total_expd,total_income-m_total_expd))
+        UI_set.LE_dayState.setText("수입합계[%d] - 지출합계[%d] = %d(원)" % (total_income, d_total_expd, total_income - d_total_expd))
+
         
     def popUpUi(self):
         ComparisonSTUI.show()
@@ -334,6 +365,24 @@ class MainView(QMainWindow):
         periodEndDay_year = periodEndDay.year()
         print(periodEndDay_detail)
 
+    '''
+           #. Name: viewByDay()
+           #. Feature
+               (1) 사용자가 선택한 특정 날짜의 내역만 보여줌
+    '''
+
+    def viewByDay(self):
+        stat2 = stat2.loc[(stat2["date"]==selectedDay_detail), :]
+
+    '''
+            #. Name: viewByPeriod()
+            #. Feature
+                (1) 사용자가 선택한 특정기간동안의 내역만 보여줌
+        '''
+
+    def viewByPeriod(self):
+        stat2=stat2.loc[(stat2["date"]>=periodStartDay_detail) & (stat2["date"]<=periodEndDay_detail),:]        
+        
     '''
         #. Name: getAddItem_typeMoney()
         #. Feature
