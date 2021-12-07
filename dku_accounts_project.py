@@ -1,4 +1,4 @@
-import sys
+import sys, random
 import os, os.path
 import pandas as pd
 import matplotlib as plt
@@ -126,11 +126,52 @@ class MainView(QMainWindow):
         chart.setAnimationOptions(QtCharts.QChart.SeriesAnimations)
         chart.setTitle("Test")
 
+        set0 = QtCharts.QBarSet('X0')
+        # set1 = QtCharts.QBarSet('X1')
+        # set2 = QtCharts.QBarSet('X2')
+        # set3 = QtCharts.QBarSet('X3')
+        # set4 = QtCharts.QBarSet('X4')
+
+        set0.append([random.randint(0, 10) for x in range(6)])
+        # set1.append([random.randint(0, 10) for x in range(6)])
+        # set2.append([random.randint(0, 10) for x in range(6)])
+        # set3.append([random.randint(0, 10) for x in range(6)])
+        # set4.append([random.randint(0, 10) for x in range(6)])
+
+        series1 = QtCharts.QBarSeries()
+        series1.append(set0)
+        # series1.append(set1)
+        # series1.append(set2)
+        # series1.append(set3)
+        # series1.append(set4)
+
+        chart1 = QtCharts.QChart()
+        chart1.addSeries(series1)
+        chart1.setTitle("test")
+        chart1.setAnimationOptions(QtCharts.QChart.SeriesAnimations)
+
+        xTags = ['a'] #, 'b', 'c', 'd', 'e']
+
+        axisX = QtCharts.QBarCategoryAxis()
+        axisX.append(xTags)
+
+        axisY = QtCharts.QValueAxis()
+        axisY.setRange(0, 15)
+
+        chart1.addAxis(axisX, QtCore.Qt.AlignBottom)
+        chart1.addAxis(axisY, QtCore.Qt.AlignLeft)
+
+        chart1.legend().setVisible(True)
+        chart1.legend().setAlignment(QtCore.Qt.AlignBottom)
+
         chartview = QtCharts.QChartView(chart)
         chartview.setRenderHint(QPainter.Antialiasing)
 
+        chartview1 = QtCharts.QChartView(chart1)
+        chartview1.setRenderHint(QPainter.Antialiasing)
+
         ComparisonSTUI.TAB_cmpExpWay.insertTab(0, chartview, "카테고리별")
-        ComparisonSTUI.TAB_cmpExpWay.insertTab(1, QTableWidget(), "대한민국 평균지출")
+        ComparisonSTUI.TAB_cmpExpWay.insertTab(1, chartview1, "대한민국 평균지출")
         ComparisonSTUI.show()
 
     '''
