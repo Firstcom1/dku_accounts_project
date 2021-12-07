@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>276</width>
+    <height>200</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,48 +16,41 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="TAB_cmpType">
-      <property name="currentIndex">
-       <number>0</number>
+     <widget class="QPushButton" name="BT_compMyCategory">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
       </property>
-      <widget class="QWidget" name="expenditure">
-       <attribute name="title">
-        <string>지출</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QTabWidget" name="TAB_cmpExpWay">
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="income">
-       <attribute name="title">
-        <string>수입</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QTabWidget" name="TAB_cmpIncomWay">
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <widget class="QWidget" name="widget">
-           <attribute name="title">
-            <string>카테고리별</string>
-           </attribute>
-          </widget>
-          <widget class="QWidget" name="tab_3">
-           <attribute name="title">
-            <string>대한민국 평균수입</string>
-           </attribute>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+      <property name="font">
+       <font>
+        <family>Agency FB</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>나의 카테고리별 지출 비교</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="BT_compST">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Agency FB</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>통계별 지출 비교</string>
+      </property>
      </widget>
     </item>
    </layout>
@@ -67,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>276</width>
      <height>21</height>
     </rect>
    </property>

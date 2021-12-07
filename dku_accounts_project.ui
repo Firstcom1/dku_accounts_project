@@ -698,38 +698,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="CB_categoryMoney">
-                 <item>
-                  <property name="text">
-                   <string>지출 카테고리</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>공부</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>음식</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>취미</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>생활</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>기타</string>
-                  </property>
-                 </item>
-                </widget>
+                <widget class="QComboBox" name="CB_categoryMoney"/>
                </item>
               </layout>
              </item>

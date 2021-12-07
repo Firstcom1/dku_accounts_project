@@ -9,8 +9,8 @@ from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
 from matplotlib import font_manager,rc
 
-categoryExp = ['기타', '음식', '공부', '취미', '생활'] # dataType: List
-categoryIncome = ['경상소득', '비경상소득'] # dataType: List
+categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타'] # dataType: List
+categoryIncome = ['수입 카테고리', '경상소득', '비경상소득'] # dataType: List
 
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
 selectedDay_day = 0 # dataType: Int, form: 5
@@ -81,6 +81,9 @@ class MainView(QMainWindow):
         addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.month()) + "-" + str(addItem_date.day()) # Default값: "2021-12-01"
         UI_set.DE_dateMoney.dateChanged.connect(self.getAddItem_dateMoney) # 변경되면 갱신
 
+        # 항목추가 中 "현금흐름 유형"의 기본값 "지출"에 따라 CB_categoryMoney를 categoryExp(지출 카테고리)로 초기화
+        UI_set.CB_categoryMoney.addItems(categoryExp)
+
         # 항목추가 中 "카테고리"에 대한 정보를 받아 전역변수에 저장
         addItem_categoryMoney = UI_set.CB_categoryMoney.currentText()  # Default값: "카테고리"
         UI_set.CB_categoryMoney.currentTextChanged.connect(self.getAddItem_categoryMoney) # 변경되면 갱신
@@ -90,6 +93,10 @@ class MainView(QMainWindow):
         # 단, addItem_placeMoney, addItem_amountMoney의 항목이 채워져 있지 않으면 항목추가 거부
         UI_set.BT_addItem.clicked.connect(self.getAddItem_remainValues)
 
+        # BT(버튼): '재무관리 통계비교'를 누를 때 연결된 UI로 이동한다.
+        UI_set.BT_compareByStatic.clicked.connect(self.toDataFile)
+
+        # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
 
         self.setCentralWidget(UI_set)
@@ -119,52 +126,10 @@ class MainView(QMainWindow):
         chart.setAnimationOptions(QtCharts.QChart.SeriesAnimations)
         chart.setTitle("Test")
 
-        set0 = QtCharts.QBarSet('X0')
-        # set1 = QtCharts.QBarSet('X1')
-        # set2 = QtCharts.QBarSet('X2')
-        # set3 = QtCharts.QBarSet('X3')
-        # set4 = QtCharts.QBarSet('X4')
-
-        set0.append([random.randint(0, 10) for x in range(6)])
-        # set1.append([random.randint(0, 10) for x in range(6)])
-        # set2.append([random.randint(0, 10) for x in range(6)])
-        # set3.append([random.randint(0, 10) for x in range(6)])
-        # set4.append([random.randint(0, 10) for x in range(6)])
-
-        series1 = QtCharts.QBarSeries()
-        series1.append(set0)
-        # series1.append(set1)
-        # series1.append(set2)
-        # series1.append(set3)
-        # series1.append(set4)
-
-        chart1 = QtCharts.QChart()
-        chart1.addSeries(series1)
-        chart1.setTitle("test")
-        chart1.setAnimationOptions(QtCharts.QChart.SeriesAnimations)
-
-        xTags = ['a'] #, 'b', 'c', 'd', 'e']
-
-        axisX = QtCharts.QBarCategoryAxis()
-        axisX.append(xTags)
-
-        axisY = QtCharts.QValueAxis()
-        axisY.setRange(0, 15)
-
-        chart1.addAxis(axisX, QtCore.Qt.AlignBottom)
-        chart1.addAxis(axisY, QtCore.Qt.AlignLeft)
-
-        chart1.legend().setVisible(True)
-        chart1.legend().setAlignment(QtCore.Qt.AlignBottom)
-
         chartview = QtCharts.QChartView(chart)
         chartview.setRenderHint(QPainter.Antialiasing)
 
-        chartview1 = QtCharts.QChartView(chart1)
-        chartview1.setRenderHint(QPainter.Antialiasing)
-
         ComparisonSTUI.TAB_cmpExpWay.insertTab(0, chartview, "카테고리별")
-        ComparisonSTUI.TAB_cmpExpWay.insertTab(1, chartview1, "대한민국 평균지출")
         ComparisonSTUI.show()
 
     '''
@@ -210,12 +175,12 @@ class MainView(QMainWindow):
         font_name = font_manager.FontProperties(fname=font_path).get_name()
         rc('font', family=font_name)
     
-   '''
+        '''
             #. Name: getUserCategoryChart()
             #. Feature
                 (1) 사용자의 카테고리별 지출 비율 출력
                 <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수 : 이벤트 추가(필요)>>
-   '''
+        '''
     def getUserCategoryChart(self):
         self.checkStat()
         try:
@@ -224,10 +189,10 @@ class MainView(QMainWindow):
         finally:
             rate['balance'].plot(
             kind='pie', autopct="%1.1f%%", startangle=10  # 어떤 그래프에 그림을 그릴지 지정
-    )
-    plt.title('나의 분야별 지출 비율', size=14)
-    plt.axis('equal')
-    plt.show()
+            )
+        plt.title('나의 분야별 지출 비율', size=14)
+        plt.axis('equal')
+        plt.show()
         
         '''
             #. Name: getHouseCategoryChart()
@@ -244,7 +209,7 @@ class MainView(QMainWindow):
         plt.title('일반 가구 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
-        
+
         '''
             #. Name: cmpUserStat()
             #. Feature
@@ -255,7 +220,7 @@ class MainView(QMainWindow):
             self.checkStat()
             stat1=pd.read_csv("./소득구간별_가구당_가계지출.csv")
             stat2=pd.read_csv(file_path)
-            
+
             #데이터 처리
             df1=self.stat.iloc[1:145,[0,1,3]]
             df1.set_index('가계지출항목별',inplace=True)
@@ -351,8 +316,16 @@ class MainView(QMainWindow):
 
         if addItem_typeMoney == "지출":
             UI_set.CH_fixedMoney.setText("고정지출")
+
+            for i in range(len(categoryIncome)):
+                UI_set.CB_categoryMoney.removeItem(0)
+            UI_set.CB_categoryMoney.addItems(categoryExp)
         elif addItem_typeMoney == "수입":
             UI_set.CH_fixedMoney.setText("고정수입")
+
+            for i in range(len(categoryExp)):
+                UI_set.CB_categoryMoney.removeItem(0)
+            UI_set.CB_categoryMoney.addItems(categoryIncome)
     '''
         #. Name: getAddItem_dateMoney()
         #. Feature
