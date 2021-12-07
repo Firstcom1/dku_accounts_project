@@ -145,6 +145,9 @@ class MainView(QMainWindow):
         
         #'나의 지출 비교 통계' 누를 때 이벤트 발생
         ComparisonSTUI.BT_compST.clicked.connect(self.getBothCategoryChart)
+        
+        #'재무 현황 새로고침' 누를 때 csv파일 읽어오기
+        UI_set.BT_f5.clicked.connect(self.reNewData)
 
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
@@ -164,6 +167,36 @@ class MainView(QMainWindow):
 
         #self.ComparisonST_UIOperation();
 
+     '''
+        #. Name: fixExped()
+        #. Feature
+            (1) 지출카테고리 고정
+        #동작원리
+            (1)기존 통합된 db에서 type이 지출인 데이터만 따로 추출
+            (2) csv파일이 아니라 딕셔너리처럼 사용할 수 있습니다. 
+             ex) {'type':['지출','지출'],'date':['2021-12-01','2021-12-02'],'category':['기타','음식']}
+             이런 형태로 데이터를 자료형으로 만듭니다. 
+            
+    '''
+    def fixExpd(self):
+        expd_stat2 = stat2.loc[stat2['type'] == '지출']
+
+    '''
+        #. Name: fixIncome()
+        #. Feature
+            (1) 수입카테고리 고정
+        '''
+    def fixIncome(self):
+        income_stat2 = stat2.loc[stat2['type'] == '수입']
+
+    '''
+        #. Name: reNewData()
+        #. Feature
+            (1) 총 수입, 총 지출량 갱신
+        '''
+    def reNewData(self):
+        pass  
+        
     def popUpUi(self):
         ComparisonSTUI.show()
         
