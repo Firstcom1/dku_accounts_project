@@ -1,7 +1,7 @@
 import sys, random
 import os, os.path
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import datetime
 from PySide2.QtCharts import *
 from PySide2.QtGui import QPainter, QPen
@@ -143,6 +143,12 @@ class MainView(QMainWindow):
 
         # BT(버튼): '재무관리 통계비교'를 누를 때 연결된 UI로 이동한다.
         UI_set.BT_compareByStatic.clicked.connect(self.popUpUi)
+        
+        #'나의 카테고리별 지출 비교'를 누를 때 이벤트 발생
+        ComparisonSTUI.BT_compMyCategory.clicked.connect(self.getUserCategoryChart)
+        
+        #'통계별 지출 비교' 누를 때 이벤트 발생
+        ComparisonSTUI.BT_compST.clicked.connect(self.getHouseCategoryChart)
 
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
@@ -162,8 +168,8 @@ class MainView(QMainWindow):
 
         #self.ComparisonST_UIOperation();
 
-        def popUpUi(self):
-            ComparisonSTUI.show()
+    def popUpUi(self):
+        ComparisonSTUI.show()
         
     '''
         #. Name: EnableViewDay()
@@ -210,13 +216,12 @@ class MainView(QMainWindow):
                 <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생>>
         '''
     def getUserCategoryChart(self):
-        try:
-            rate=stat.groupby('category').sum()
-            rate.index = ['음식', '취미', '생활', '공부', '기타']
-        finally:
-            rate['balance'].plot(
-            kind='pie', autopct="%1.1f%%", startangle=10  # 어떤 그래프에 그림을 그릴지 지정
-            )
+        df = stat2.loc[stat2['type'] == "지출"]
+        rate = df.groupby('category').sum()
+        wedgeprops={'width': 0.7, 'edgecolor': 'w', 'linewidth': 5}
+        rate['balance'].plot(
+        kind='pie', autopct="%1.1f%%", startangle=10, wedgeprops=wedgeprops
+        )
         plt.title('나의 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
@@ -235,50 +240,7 @@ class MainView(QMainWindow):
         plt.title('일반 가구 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
-
-        '''
-            #. Name: cmpUserStat()
-            #. Feature
-                (1) 소득구간별, 카테고리별 지출 비율을 자신의 소비 습관과 비교
-                <<"나의 분야별 소비비율 비교하기 " 버튼을 눌렀을 때 발생하는 이벤트 함수>>
-        '''
-        def cmpUserStat(self):
-            #데이터 처리
-            df1=stat1.iloc[1:145,[0,1,3]]
-            df1.set_index('가계지출항목별',inplace=True)
-            df2=df1.drop(['가구원수 (명)','가구주연령 (세)','가구분포 (%)','가계지출 (원)','소비지출 (원)','비소비지출 (원)'])
-            df2.rename({'01.식료품 · 비주류음료 (원)':'음식','02.주류 · 담배 (원)':'음식','03.의류 · 신발 (원)':'취미','04.주거 · 수도 · 광열 (원)':
-            '생활','05.가정용품 · 가사서비스 (원)':'생활','06.보건 (원)':'생활','07.교통 (원)':'생활','08.통신 (원)':'생활','09.오락 · 문화 (원)':'취미','10.교육 (원)':'공부','11.음식 · 숙박 (원)':'음식','12.기타상품 · 서비스 (원)':'기타'},inplace=True)
-            df2.reset_index(inplace=True)
-            
-            #데이터 처리(사용자)
-            df3=stat.iloc[:,[0,1,2,4]]
-            df3.set_index('category',inplace=True)
-            df4=df3.loc[df3['type']=="지출"]
-            df4.reset_index(inplace=True)
-
-            #그래프 객체 생성(서브 2개)
-            fig=plt.figure(figsize=(10,10))
-            ax1=fig.add_subplot(2,1,1)
-            ax2=fig.add_subplot(2,1,2)
-            
-            #ax객체로 그래프 2개 그리기(bar(x,y)
-            #그래프 1
-            ax1.bar(df2['소득계층별'],df2['2018'].sum(),width=0.3)
-            ax1.set_title('일반 가구 분야별 소비량')
-            #그래프2
-            ax2.bar(df4['category'],df4['balance'].sum(),width=0.4)
-            ax2.set_title('나의 분야별 소비량')
-            
-            #x축 눈금 표시
-            ax1.tick_params(axis="x",labelsize=7.5)
-
-            #y축 범위 지정
-            ax1.set_ylim(100000,5500000)
-            ax2.set_ylim(30000,1000000)
-
-            plt.show()
-    
+        
         '''
         #. Name: getSelectedDay()
         #. Feature
