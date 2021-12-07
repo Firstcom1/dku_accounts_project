@@ -1,14 +1,6 @@
-date,2021 3/4
-type,whole
-number,2.37
-age,52.62
-percentage,100
-income,4728905
-가계지출,3499828
-소비지출,2544163
-grocery,"825,326"
-hobby,"247,404"
-life,"1,047,884"
+category,expense
+grocery,825326
+hobby,247404
+life,1047884
 education,221198
 etc,202353
-비소비지출,955665
