@@ -135,7 +135,7 @@ class MainView(QMainWindow):
         UI_set.BT_addItem.clicked.connect(self.getAddItem_remainValues)
 
         # BT(버튼): '재무관리 통계비교'를 누를 때 연결된 UI로 이동한다.
-        UI_set.BT_compareByStatic.clicked.connect(self.toDataFile)
+        UI_set.BT_compareByStatic.clicked.connect(self.popUpUi)
 
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
@@ -149,9 +149,15 @@ class MainView(QMainWindow):
         ErrorUI.setWindowTitle("Error")
         ErrorUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/icon.png")))
         ErrorUI.resize(450, 200)
+        
+        ComparisonSTUI.setWindowTitle("재무 관리 통계")
+        ComparisonSTUI.setWindowIcon(QtGui.QPixmap(resource_path("./image/dku.jpg")))
 
         #self.ComparisonST_UIOperation();
 
+        def popUpUi(self):
+            ComparisonSTUI.show()
+        
     '''
         #. Name: EnableViewDay()
         #. Feature
