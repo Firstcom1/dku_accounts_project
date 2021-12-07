@@ -49,7 +49,7 @@
        </font>
       </property>
       <property name="text">
-       <string>통계별 지출 비교</string>
+       <string>나의 지출 비교 통계</string>
       </property>
      </widget>
     </item>
