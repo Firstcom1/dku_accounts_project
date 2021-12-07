@@ -9,8 +9,17 @@ from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
 from matplotlib import font_manager,rc
 
+# 한글 폰트 설정
+font_path = './malgun.ttf'
+font_name = font_manager.FontProperties(fname=font_path).get_name()
+rc('font', family=font_name)
+
 categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타'] # dataType: List
 categoryIncome = ['수입 카테고리', '경상소득', '비경상소득'] # dataType: List
+
+stat = pd.read_csv("./가구당_월평균_가계수지.csv")
+stat1 = pd.read_csv("./소득구간별_가구당_가계지출.csv")
+stat2 = pd.read_csv("./accounts_data.csv")
 
 viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
 VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
@@ -58,8 +67,6 @@ class MainView(QMainWindow):
         global selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
         global periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
         global periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
-
-        global file_path; file_path="./accounts_data.csv"
 
         # TAB_displayType의 CB(ComboBox)_fixExpCategory 목록 작성
         UI_set.CB_fixExpCategory.addItems(categoryExp)
@@ -189,36 +196,22 @@ class MainView(QMainWindow):
         '''
             #. Name: totDataFile()
             #. Feature
-                (1) 사용자 입력 데이터 csv 파일(file_path)에 저장
+                (1) 사용자 입력 데이터 csv 파일에 저장
         '''
     def toDataFile(self):
-        df1=pd.read_csv(file_path)
         data={'mtype': addItem_typeMoney, 'date': addItem_dateMoney, 'category': addItem_categoryMoney,'place': addItem_placeMoney, 'balance': addItem_amountMoney, 'comment': addItem_commentMoney}
-        df2 = df1.append(data, ignore_index=True)
-        df2.to_csv("accounts_data.csv")
-        
-        '''
-        #. Name: checkStat()
-        #. Feature
-            (1) 데이터 분석을 위한 기초
-        '''
-    def checkStat(self):
-        self.stat=pd.read_csv("./가구당_월평균_가계수지.csv")
-        # 한글 폰트 설정
-        font_path = './malgun.ttf'
-        font_name = font_manager.FontProperties(fname=font_path).get_name()
-        rc('font', family=font_name)
-    
+        df = stat.append(data, ignore_index=True)
+        df.to_csv("accounts_data.csv")
+   
         '''
             #. Name: getUserCategoryChart()
             #. Feature
                 (1) 사용자의 카테고리별 지출 비율 출력
-                <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수 : 이벤트 추가(필요)>>
+                <<"나의 분야 별 소비비율" 버튼을 눌렀을 때 발생>>
         '''
     def getUserCategoryChart(self):
-        self.checkStat()
         try:
-            rate=self.stat.groupby('category').sum()
+            rate=stat.groupby('category').sum()
             rate.index = ['음식', '취미', '생활', '공부', '기타']
         finally:
             rate['balance'].plot(
@@ -235,8 +228,7 @@ class MainView(QMainWindow):
                 <<"분야 별 소비비율" 버튼을 눌렀을 때 발생하는 이벤트 함수>>
        '''
     def getHouseCategoryChart(self):
-        self.checkStat()
-        self.stat.index = ['음식', '취미', '생활', '공부', '기타']
+        stat.index = ['음식', '취미', '생활', '공부', '기타']
         stat['expense'].plot(
             kind='pie', autopct="%1.1f%%", startangle=10
         )
@@ -251,12 +243,8 @@ class MainView(QMainWindow):
                 <<"나의 분야별 소비비율 비교하기 " 버튼을 눌렀을 때 발생하는 이벤트 함수>>
         '''
         def cmpUserStat(self):
-            self.checkStat()
-            stat1=pd.read_csv("./소득구간별_가구당_가계지출.csv")
-            stat2=pd.read_csv(file_path)
-
             #데이터 처리
-            df1=self.stat.iloc[1:145,[0,1,3]]
+            df1=stat1.iloc[1:145,[0,1,3]]
             df1.set_index('가계지출항목별',inplace=True)
             df2=df1.drop(['가구원수 (명)','가구주연령 (세)','가구분포 (%)','가계지출 (원)','소비지출 (원)','비소비지출 (원)'])
             df2.rename({'01.식료품 · 비주류음료 (원)':'음식','02.주류 · 담배 (원)':'음식','03.의류 · 신발 (원)':'취미','04.주거 · 수도 · 광열 (원)':
@@ -264,7 +252,7 @@ class MainView(QMainWindow):
             df2.reset_index(inplace=True)
             
             #데이터 처리(사용자)
-            df3=stat2.iloc[:,[0,1,2,4]]
+            df3=stat.iloc[:,[0,1,2,4]]
             df3.set_index('category',inplace=True)
             df4=df3.loc[df3['type']=="지출"]
             df4.reset_index(inplace=True)
