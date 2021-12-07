@@ -37,7 +37,7 @@
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -385,7 +385,7 @@
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3">
+               <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0">
                 <item>
                  <widget class="QTableWidget" name="TW_displayIncome">
                   <property name="sortingEnabled">
