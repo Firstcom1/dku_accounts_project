@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib as plt
 import sqlite3 as sq
 import datetime
-from PySide6.QtCharts import *
-from PySide6.QtGui import QPainter, QPen
-from PySide6 import QtUiTools, QtGui, QtCore, QtWidgets
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene, \
+from PySide2.QtCharts import *
+from PySide2.QtGui import QPainter, QPen
+from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
+from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene, \
     QAbstractItemView
 from matplotlib import font_manager, rc
 
