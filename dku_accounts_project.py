@@ -176,7 +176,7 @@ class MainView(QMainWindow):
             (2) csv파일이 아니라 딕셔너리처럼 사용할 수 있습니다. 
              ex) {'type':['지출','지출'],'date':['2021-12-01','2021-12-02'],'category':['기타','음식']}
              이런 형태로 데이터를 자료형으로 만듭니다. 
-            
+            >>테이블위젯으로 출력하는 건 딕셔너리 자료형에서 추출해서 하시면 될 것 
     '''
     def fixExpd(self):
         expd_stat2 = stat2.loc[stat2['type'] == '지출']
