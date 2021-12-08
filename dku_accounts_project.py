@@ -78,8 +78,7 @@ addItem_amountMoney = 0 # dataType: Str
 addItem_commentMoney = 0 # dataType: Str
 addItem_fixedMoney = 0 # dataType: Bool
 
-total_income = 0
-m_total_income = 0 #dataType: Int, 한달 수입
+total_income = 0 #dataType: Int, 한달 수입
 m_total_expd = 0 #dataType: Int, 한달 지출
 d_total_expd = 0 #dataType: Int, 하루 지출
 
