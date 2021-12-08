@@ -82,7 +82,7 @@ addItem_fixedMoney = 0  # dataType: Bool
 total_income= 0  # dataType: Int, 한달 수입
 m_total_expd = 0  # dataType: Int, 한달 지출
 d_total_expd = 0  # dataType: Int, 하루 지출
-
+d_total_income=0 # dataType: Int, 하루 수입
 
 class MainView(QMainWindow):
     def __init__(self):
@@ -282,7 +282,8 @@ class MainView(QMainWindow):
         df1.drop([0, 1, 2, 3, 4, 5], axis=1, inplace=True)
         df2.drop([0, 1, 2, 3, 4, 5], axis=1, inplace=True)
 
-        total_income = df1.loc[stat2['type'] == '수입', "balance"].sum()
+        m_total_income = df1.loc[stat2['type'] == '수입', "balance"].sum()
+        d_total_income = df2.loc[stat2['type'] == '수입', "balance"].sum()
         m_total_expd = df1.loc[stat2['type'] == '지출', "balance"].sum()  # 한달 지출합계
         d_total_expd = df2.loc[stat2['type'] == '지출', "balance"].sum()
 
@@ -303,9 +304,9 @@ class MainView(QMainWindow):
 
     def printMoneyState(self):
         UI_set.LE_moneyState.setText(
-            "수입합계[%d] - 지출합계[%d] = %d (원)" % (total_income, m_total_expd, total_income - m_total_expd))
+            "수입합계[%d] - 지출합계[%d] = %d (원)" % (m_total_income, m_total_expd, m_total_income - m_total_expd))
         UI_set.LE_dayState.setText(
-            "수입합계[%d] - 지출합계[%d] = %d (원)" % (total_income, d_total_expd, total_income - d_total_expd))
+            "수입합계[%d] - 지출합계[%d] = %d (원)" % (d_total_income, d_total_expd, d_total_income - d_total_expd))
 
     def popUpUi(self):
         ComparisonSTUI.show()
