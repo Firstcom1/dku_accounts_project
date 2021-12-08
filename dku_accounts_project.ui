@@ -120,7 +120,7 @@
                    <number>0</number>
                   </property>
                   <property name="columnCount">
-                   <number>6</number>
+                   <number>7</number>
                   </property>
                   <attribute name="horizontalHeaderVisible">
                    <bool>false</bool>
@@ -140,6 +140,11 @@
                   <attribute name="verticalHeaderVisible">
                    <bool>false</bool>
                   </attribute>
+                  <column>
+                   <property name="text">
+                    <string>삭제</string>
+                   </property>
+                  </column>
                   <column>
                    <property name="text">
                     <string>현금흐름 유형</string>
@@ -227,7 +232,7 @@
                    <number>0</number>
                   </property>
                   <property name="columnCount">
-                   <number>6</number>
+                   <number>7</number>
                   </property>
                   <attribute name="horizontalHeaderCascadingSectionResizes">
                    <bool>false</bool>
@@ -244,6 +249,11 @@
                   <attribute name="verticalHeaderVisible">
                    <bool>false</bool>
                   </attribute>
+                  <column>
+                   <property name="text">
+                    <string>삭제</string>
+                   </property>
+                  </column>
                   <column>
                    <property name="text">
                     <string>현금흐름 유형</string>
@@ -331,7 +341,7 @@
                    <number>0</number>
                   </property>
                   <property name="columnCount">
-                   <number>6</number>
+                   <number>7</number>
                   </property>
                   <attribute name="horizontalHeaderVisible">
                    <bool>false</bool>
@@ -354,6 +364,11 @@
                   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
                    <bool>false</bool>
                   </attribute>
+                  <column>
+                   <property name="text">
+                    <string>삭제</string>
+                   </property>
+                  </column>
                   <column>
                    <property name="text">
                     <string>현금흐름 유형</string>

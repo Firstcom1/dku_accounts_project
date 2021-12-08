@@ -7,6 +7,7 @@ from PySide2.QtCharts import *
 from PySide2.QtGui import QPainter, QPen
 from PySide2 import QtUiTools, QtGui, QtCore, QtWidgets
 from PySide2.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QGraphicsView, QGraphicsScene
+from PySide2.QtWidgets import QPushButton
 from matplotlib import font_manager,rc
 
 # 한글 폰트 설정
@@ -14,14 +15,17 @@ font_path = './malgun.ttf'
 font_name = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font_name)
 
+row = 0
+col = 1
+
 categoryExp = ['지출 카테고리', '음식', '공부', '취미', '생활', '기타']  # dataType: List
 categoryIncome = ['수입 카테고리', '경상소득', '비경상소득']  # dataType: List
 
 today=datetime.today().day #현재 일 , dataType: Int
 now_month=datetime.today().month #현재 달, dataType: Int
 
-stat = pd.read_csv("./가구당_월평균_가계수지.csv")
-stat2 = pd.read_csv("./accounts_data.csv")
+# stat = pd.read_csv("./가구당_월평균_가계수지.csv")
+# stat2 = pd.read_csv("./accounts_data.csv")
 
 viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
 VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
@@ -30,6 +34,8 @@ VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
 COL_TYPE_IDX = 0 # dateType: Int, purpose: 상수 for 데이터파일 현금흐름 유형(열-헤더) 식별
 COL_DATE_IDX = 1 # dateType: Int, purpose: 상수 for 데이터파일 날짜(열-헤더) 식별
 COL_CATEGORY_IDX = 2 # dateType: Int, purpose: 상수 for 데이터파일 카테고리(열-헤더) 식별
+removeButtonList = list() # dataType: list(of OPushButton)
+removeEventIndex = 0
 
 currentTableObject = None # dateType: QTabWidget, purpose: loadUserData_toFile에서 탭 종류 식별
 currentTabType = list() # dateType: list, purpose: loadUserData_toFile에서 현금흐름 유형 종류 식별
@@ -39,6 +45,7 @@ isFixIncome = False
 currentFixCategory_Exp = 0
 currentFixCategory_Income = 0
 
+tabIndex = 0
 TAB_ALL_ACCOUNT = 0
 TAB_EXP = 1
 TAB_INCOME = 2
@@ -82,12 +89,14 @@ class MainView(QMainWindow):
         self.printMonth()
 
     def setupUI(self):
+
         global UI_set, ErrorUI, ComparisonSTUI
 
         UI_set = QtUiTools.QUiLoader().load(resource_path("./dku_accounts_project.ui"))
         ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
         ComparisonSTUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
 
+        global removeEventIndex
         global currentTableObject, currentTabType
         global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
         global selectedDay, selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
@@ -97,7 +106,7 @@ class MainView(QMainWindow):
         # TAB_displayType의 TAB이 전환될 때 -> loadUserData_toFile() 과 유기적 연결 필요
         currentTableObject = UI_set.TW_displayAllAccounts # Default값: 전체 출납목록 TW
         currentTabType = ['지출', '수입']
-        UI_set.TAB_displayType.setCurrentIndex(0)
+        UI_set.TAB_displayType.setCurrentIndex(tabIndex)
         UI_set.TAB_displayType.currentChanged.connect(self.getCurrentTableObject)
 
         self.openUserDataFile() # accounts_data.csv 파일 (rt+)모드로 오픈
@@ -110,6 +119,8 @@ class MainView(QMainWindow):
         # TAB_displayType의 CB(ComboBox)_fixIncomeCategory 목록 작성
         UI_set.CB_fixIncomeCategory.addItems(categoryIncome)
         UI_set.CB_fixIncomeCategory_2.addItems(categoryIncome)
+
+        self.listenRemoveSignal()
 
         # 지출/수입 카테고리 CH(CheckBox)가 활성화
         UI_set.CH_fixExpCategory.stateChanged.connect(self.isFixCategory)
@@ -173,7 +184,7 @@ class MainView(QMainWindow):
 
         # 항목추가 中 "날짜"에 대한 정보를 받아 전역변수에 저장
         addItem_date = UI_set.DE_dateMoney.date()
-        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.month()) + "-" + str(addItem_date.day()) # Default값: "2021-12-01"
+        addItem_dateMoney = addItem_date.toString(QtCore.Qt.ISODate) # Default값: "2021-12-01"
         UI_set.DE_dateMoney.dateChanged.connect(self.getAddItem_dateMoney) # 변경되면 갱신
 
         # 항목추가 中 "현금흐름 유형"의 기본값 "지출"에 따라 CB_categoryMoney를 categoryExp(지출 카테고리)로 초기화
@@ -304,15 +315,18 @@ class MainView(QMainWindow):
             (5) (전체 출납목록)(지출)(수입) TW(TableWidget)데이터 (지출)(수입)카테고리 필터링
     '''
     def loadUserData_toTable(self):
-        #print(currentFixCategory_Income)
-        #print(currentFixCategory_Exp)
+        global removeButtonList
+        global row
+        global col
+
         row = 0
-        col = 0
+        col = 1
 
         userDataFile.seek(0, 0)
         userData = userDataFile.readlines()
 
         currentTableObject.clearContents()
+        removeButtonList.clear()
         for i in range(len(userData)):
             currentTableObject.removeRow(0)
 
@@ -361,11 +375,64 @@ class MainView(QMainWindow):
                     continue
 
             currentTableObject.insertRow(row)
+            removeButtonList.append(QPushButton("삭제"))
+            currentTableObject.setCellWidget(row, 0, removeButtonList[row])
             for dataFragText in dataFrag:
-                currentTableObject.setItem(row, col, QTableWidgetItem(dataFragText))
+                item = QTableWidgetItem(dataFragText)
+                if dataFrag[COL_TYPE_IDX] == "지출":
+                    item.setTextColor(QtGui.QColor("blue"))
+                elif dataFrag[COL_TYPE_IDX] == "수입":
+                    item.setTextColor(QtGui.QColor("red"))
+                currentTableObject.setItem(row, col, item)
                 col = col + 1
             row = row + 1
-            col = 0
+            col = 1
+
+    '''
+        #. Name: listenRemoveSignal()
+        #. Feature
+            (1) loadUserData_toFile() 호출 시 삭제 버튼 오브젝트를 재생성하므로 UI상에서 업데이트 하도록
+    '''
+    def listenRemoveSignal(self):
+        for removeEventIndex in range(len(removeButtonList)):
+            removeButtonList[removeEventIndex].clicked.connect(self.delFromFile)
+
+
+    '''
+        #. Name: delFromFile()
+        #. Feature
+            (1) listenRemoveSignal() 발생하는 삭제 이벤트, 그리고 이벤트가 발생한 버튼의 index를 추적
+            (2) 그 index에 해당하는 모든 테이블 아이템을 csv내에 형식으로 합쳐서 str 생성
+            (3) 생성된 str과 일치하는 파일데이터 삭제
+    '''
+    def delFromFile(self):
+        global userDataFile
+        removeData = list()
+
+        removeEventIndex = removeButtonList.index(self.sender())
+
+        for i in range(6):
+            tempItemText = currentTableObject.item(removeEventIndex, i+1)
+            tempItemText = tempItemText.text()
+            removeData.append(tempItemText)
+
+        removeDataStr = ",".join(removeData)
+
+        userDataFile.seek(0, 0)
+        userData = userDataFile.readlines()
+        userData.remove(removeDataStr)
+
+        userDataFile.close()
+        try:
+            userDataFile = open("accounts_data.csv", "wt+", encoding="UTF8") # 파일 내용을 모두 지우기 위해 읽기모드로 연다.
+        except:
+            sys.stderr.write("No file: %s\n" % "accounts_data.csv")
+            exit(1)
+
+        userDataFile.writelines(userData)
+
+        self.loadUserData_toTable()
+        self.listenRemoveSignal() # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
     '''
         #. Name: generatePeriodList()
@@ -403,6 +470,7 @@ class MainView(QMainWindow):
     def getCurrentTableObject(self):
         global currentTableObject # dataType: QTableWidget
         global currentTabType # dataType: List
+        global tabIndex
         tabIndex = UI_set.TAB_displayType.currentIndex()
 
         if tabIndex == TAB_ALL_ACCOUNT:
@@ -416,7 +484,15 @@ class MainView(QMainWindow):
             currentTabType = ['수입']
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal() # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
+    '''
+        #. Name: isFixCategory()
+        #. Feature
+            (1) 테이블 위, [지출/수입]카테고리 체크 여부 저장
+            (2) CH(CheckBox) on/off에 따라 CB(ComboBox) 활성화/비활성화
+            (3) 그리고 loadUserData_toFile()을 호출하여 화면 갱신
+    '''
     def isFixCategory(self):
         global isFixExp, isFixIncome
 
@@ -447,6 +523,12 @@ class MainView(QMainWindow):
 
         self.loadUserData_toTable()
 
+    '''
+        #. Name: fixCategory_Exp()
+        #. Feature
+            (1) 실제 CB에서 선택된 데이터 저장
+            (2) 저장된 데이터는 loadUserData_toFile()에서 필터링하는데 사용
+    '''
     def fixCategory_Exp(self):
         global currentFixCategory_Exp
 
@@ -456,7 +538,15 @@ class MainView(QMainWindow):
             currentFixCategory_Exp = UI_set.CB_fixExpCategory_2.currentText()
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
+
+    '''
+        #. Name: fixCategory_Income()
+        #. Feature
+            (1) 실제 CB에서 선택된 데이터 저장
+            (2) 저장된 데이터는 loadUserData_toFile()에서 필터링하는데 사용
+    '''
     def fixCategory_Income(self):
         global currentFixCategory_Income
 
@@ -466,6 +556,7 @@ class MainView(QMainWindow):
             currentFixCategory_Income = UI_set.CB_fixIncomeCategory_2.currentText()
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
     '''
         #. Name: EnableViewDay()
@@ -482,6 +573,7 @@ class MainView(QMainWindow):
         UI_set.DE_periodEndDay.setEnabled(0)
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
     '''
         #. Name: EnableViewPeriod()
         #. Feature
@@ -498,6 +590,7 @@ class MainView(QMainWindow):
 
         self.generatePeriodList()
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
         '''
             #. Name: totDataFile()
@@ -574,6 +667,7 @@ class MainView(QMainWindow):
         selectedDay_year = selectedDay.year()
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
     '''
         #. Name: getPeriodStartDay()
@@ -593,6 +687,7 @@ class MainView(QMainWindow):
 
         self.generatePeriodList()
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
 
     '''
         #. Name: getPeriodEndDay()
@@ -612,6 +707,7 @@ class MainView(QMainWindow):
 
         self.generatePeriodList()
         self.loadUserData_toTable()
+        self.listenRemoveSignal()  # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
         
     '''
         #. Name: getAddItem_typeMoney()
@@ -625,12 +721,14 @@ class MainView(QMainWindow):
 
         if addItem_typeMoney == "지출":
             UI_set.CH_fixedMoney.setText("고정지출")
+            UI_set.LB_usePlace.setText("사용처")
 
             for i in range(len(categoryIncome)):
                 UI_set.CB_categoryMoney.removeItem(0)
             UI_set.CB_categoryMoney.addItems(categoryExp)
         elif addItem_typeMoney == "수입":
             UI_set.CH_fixedMoney.setText("고정수입")
+            UI_set.LB_usePlace.setText("수입처")
 
             for i in range(len(categoryExp)):
                 UI_set.CB_categoryMoney.removeItem(0)
