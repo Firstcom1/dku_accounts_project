@@ -693,7 +693,10 @@ class MainView(QMainWindow):
         addItem_toString.append(addItem_categoryMoney)
         addItem_toString.append(addItem_placeMoney)
         addItem_toString.append(addItem_amountMoney)
-        addItem_toString.append(addItem_commentMoney + '\n')
+        if addItem_fixedMoney == True:
+            addItem_toString.append("[고정]" + addItem_commentMoney + '\n')
+        else:
+            addItem_toString.append(addItem_commentMoney + '\n')
         addItem_toString = ",".join(addItem_toString)
 
         userDataFile.seek(0, 2)
