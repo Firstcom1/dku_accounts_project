@@ -844,7 +844,7 @@ p, li { white-space: pre-wrap; }
            <string notr="true"/>
           </property>
           <property name="text">
-           <string>수입합계[580,000￦] - 지출합계[24,000￦] = 556,000￦</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -892,7 +892,7 @@ p, li { white-space: pre-wrap; }
            <string notr="true"/>
           </property>
           <property name="text">
-           <string>수입합계[580,000￦] - 지출합계[24,000￦] = 556,000￦</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -903,6 +903,19 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QPushButton" name="BT_f5">
+      <property name="font">
+       <font>
+        <family>Agency FB</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>재무현황 새로고침</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -911,7 +924,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1300</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
