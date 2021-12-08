@@ -23,6 +23,7 @@ categoryIncome = ['수입 카테고리', '경상소득', '비경상소득']  # d
 
 today = datetime.today().day  # 현재 일 , dataType: Int
 now_month = datetime.today().month  # 현재 달, dataType: Int
+now_day=datetime.today() #현재 년도,월,일,시간, dataType: Int
 
 stat = pd.read_csv("./가구당_월평균_가계수지.csv")
 stat2 = pd.read_csv("./accounts_data.csv")
@@ -263,18 +264,27 @@ class MainView(QMainWindow):
 
     def reNewData(self):
         global total_income,m_total_expd,d_total_expd
-        new_df = pd.read_csv("./accounts_data.csv")
-        df = pd.DataFrame(columns=range(6))
+        
+        stat2 = pd.read_csv("./accounts_data.csv")
+        df1 = pd.DataFrame(columns=range(6))
+        df2= pd.DataFrame(columns=range(6))
 
-        for i in set(new_df["date"].values):
+        for i in set(stat2["date"].values):
             if (str(now_month) in i):
-                df = df.append(stat2.loc[(new_df['date'] == i)])  # 이번 달 내역만 있는 데이터프레임
+                df1 = df1.append(stat2.loc[(new_df['date'] == i)])  # 이번 달 내역만 있는 데이터프레임
+        
+        for i in set(stat2["date"].values):
+            if (now_day.strftime("%Y-%m-%d") in i):
+                df2 = df2.append(stat2.loc[(new_df['date'] == i)])  #오늘 내역만 있는 데이터프레임
+            else:
+                df2=df2.append([0])
 
-        df.drop([0, 1, 2, 3, 4, 5], axis=1, inplace=True)
+        df1.drop([0, 1, 2, 3, 4, 5], axis=1, inplace=True)
+        df2.drop([0, 1, 2, 3, 4, 5], axis=1, inplace=True)
 
-        total_income = df.loc[new_df['type'] == '수입', "balance"].sum()
-        m_total_expd = df.loc[new_df['type'] == '지출', "balance"].sum()  # 한달 지출합계
-        d_total_expd = df.loc[new_df['type'] == '지출', "balance"].sum()
+        total_income = df1.loc[stat2['type'] == '수입', "balance"].sum()
+        m_total_expd = df1.loc[stat2['type'] == '지출', "balance"].sum()  # 한달 지출합계
+        d_total_expd = df2.loc[stat2['type'] == '지출', "balance"].sum()
 
     '''
         #. Name: printMonth()
