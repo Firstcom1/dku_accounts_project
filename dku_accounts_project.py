@@ -29,16 +29,21 @@ VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
 COL_DATE_IDX = 1 # dataType: Int, purpose: 상수 for "날짜" 필터링
 COL_CATEGORY_IDX = 2 # dataType: Int, purpose: 상수 for "카테고리" 필터링
 
+selectedDay = None # dateType: QtDate
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
 selectedDay_day = 0 # dataType: Int, form: 5
 selectedDay_month = 0 # dataType:Int, form: 12
 selectedDay_year = 0 # dataType: Int, form : 2021
 
+periodStartToEnd = list()
+
+periodStartDay = None # dateType: QtDate
 periodStartDay_detail = 0 # dataType: Str
 periodStartDay_day = 0 # dataType: Int
 periodStartDay_month = 0 # dataType: Int
 periodStartDay_year = 0 # dataType: Int
 
+periodEndDay = None # dateType: QtDate
 periodEndDay_detail = 0 # dataType: Str
 periodEndDay_day = 0 # dataType: Int
 periodEndDay_month = 0 # dataType: Int
@@ -68,11 +73,12 @@ class MainView(QMainWindow):
         ComparisonSTUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
 
         global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
-        global selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
-        global periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
-        global periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
+        global selectedDay, selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
+        global periodStartDay, periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
+        global periodEndDay, periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
 
         self.openUserDataFile()
+
         self.loadUserData_toTable()
 
         # TAB_displayType의 CB(ComboBox)_fixExpCategory 목록 작성
@@ -99,18 +105,18 @@ class MainView(QMainWindow):
 
         # 조회방법: "일별 조회"에서 사용자가 조회하고자 하는 특정한 날의 정보를 받아서 전역변수에 저장
         # >>>> Part1: [일별 조회] Default값: 초기 설정값 받아오기
-        selectedDate = UI_set.CW_selectDay.selectedDate()
-        selectedDay_detail = str(selectedDate.year()) + "-" + str(selectedDate.month()) + "-" + str(selectedDate.day())
-        selectedDay_day = selectedDate.day()
-        selectedDay_month = selectedDate.month()
-        selectedDay_year = selectedDate.year()
+        selectedDay = UI_set.CW_selectDay.selectedDate()
+        selectedDay_detail = selectedDay.toString(QtCore.Qt.ISODate)
+        selectedDay_day = selectedDay.day()
+        selectedDay_month = selectedDay.month()
+        selectedDay_year = selectedDay.year()
         # >>>> Part2: [일별 조회] Default값: 사용자 초기값 변경 시
         UI_set.CW_selectDay.clicked.connect(self.getSelectedDay)
 
         # 조회방법: "기간별 조회"에서 "조회 시작일" 정보를 받아서 전역변수에 저장
         # >>>> Part1: [조회 시작일] Default값: 초기 설정값 받아오기
         periodStartDay = UI_set.DE_periodStartDay.date()
-        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(periodStartDay.day())
+        periodStartDay_detail = periodStartDay.toString(QtCore.Qt.ISODate)
         periodStartDay_day = periodStartDay.day()
         periodStartDay_month = periodStartDay.month()
         periodStartDay_year = periodStartDay.year()
@@ -120,12 +126,14 @@ class MainView(QMainWindow):
         # 조회방법: "기간별 조회"에서 "조회 종료일" 정보를 받아서 전역변수에 저장
         # >>>> Part1: [조회 종료일] Default값: 초기 설정값 받아오기
         periodEndDay = UI_set.DE_periodEndDay.date()
-        periodEndDay_detail = str(periodEndDay.year()) + "-" + str(periodEndDay.month()) + "-" + str(periodEndDay.day())
+        periodEndDay_detail = periodEndDay.toString(QtCore.Qt.ISODate)
         periodEndDay_day = periodEndDay.day()
         periodEndDay_month = periodEndDay.month()
         periodEndDay_year = periodEndDay.year()
         # >>>> Part2: [조회 종료일] Default값: 사용자 초기값 변경 시
         UI_set.DE_periodEndDay.dateChanged.connect(self.getPeriodEndDay)
+
+        #self.generatePeriodList()
 
         # 항목추가 中 "현금흐름 유형"에 대한 정보를 받아 전역변수에 저장
         addItem_typeMoney = UI_set.CB_typeMoney.currentText() # Default값: "지출"
@@ -220,7 +228,7 @@ class MainView(QMainWindow):
             dataFrag = dataSet.split(",")
             dataFrag[-1].replace("\n", "")
 
-            if viewSelectedWay == None:
+            if viewSelectedWay == None: # 날짜 필터링
                 pass
             elif viewSelectedWay == VIEW_ONEDAY:
                 if dataFrag[COL_DATE_IDX] != selectedDay_detail:
@@ -228,7 +236,17 @@ class MainView(QMainWindow):
                 else:
                     pass
             elif viewSelectedWay == VIEW_PREIOD:
-
+                flag = False
+                for elementOfPeriod in periodStartToEnd:
+                    if dataFrag[COL_DATE_IDX] == elementOfPeriod:
+                        flag = True
+                        break
+                    else:
+                        flag = False
+                if flag == True:
+                    pass
+                elif flag == False:
+                    continue
 
             UI_set.TW_displayAllAccounts.insertRow(row)
             for dataFragText in dataFrag:
@@ -239,6 +257,22 @@ class MainView(QMainWindow):
 
         userDataFile.seek(0)
 
+    def generatePeriodList(self): # 기간별 조회에서 기간에 해당하는 모든 날의 Str값을 받아온다.
+        global periodStartToEnd
+        periodStartToEnd.clear()
+        periodStartToEnd.append(periodStartDay)
+        tempAddDay = periodStartDay.addDays(1)
+
+        while periodEndDay.toString(QtCore.Qt.ISODate) != tempAddDay.toString(QtCore.Qt.ISODate):
+            periodStartToEnd.append(tempAddDay)
+            tempAddDay = tempAddDay.addDays(1)
+
+        periodStartToEnd.append(tempAddDay)
+        index = 0
+
+        for elementOfperiod in periodStartToEnd: # 객체 형태(QDate)의 날짜를 Str형식의 날짜로 바꾼다.
+            periodStartToEnd[index] = elementOfperiod.toString(QtCore.Qt.ISODate)
+            index = index + 1
 
         def popUpUi(self):
             ComparisonSTUI.show()
@@ -273,6 +307,9 @@ class MainView(QMainWindow):
         UI_set.DE_periodStartDay.setEnabled(1)
         UI_set.DE_periodEndDay.setEnabled(1)
 
+        print(periodStartDay)
+        print(periodEndDay)
+        self.generatePeriodList()
         self.loadUserData_toTable()
 
         '''
@@ -402,8 +439,7 @@ class MainView(QMainWindow):
         plt.title('일반 가구 분야별 지출 비율', size=14)
         plt.axis('equal')
         plt.show()
-        
->>>>>>> b457b37a312859bc63f7fbcfc1a70ab1a6d59061
+
         '''
         #. Name: getSelectedDay()
         #. Feature
@@ -412,12 +448,12 @@ class MainView(QMainWindow):
             (3) 전역변수 selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year 에 해당 정보 저장
         '''
     def getSelectedDay(self):
-        global selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year
-        selectedDate = UI_set.CW_selectDay.selectedDate()
-        selectedDay_detail = str(selectedDate.year()) + "-" + str(selectedDate.month()) + "-" + str(selectedDate.day())
-        selectedDay_day = selectedDate.day()
-        selectedDay_month = selectedDate.month()
-        selectedDay_year = selectedDate.year()
+        global selectedDay, selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year
+        selectedDay = UI_set.CW_selectDay.selectedDate()
+        selectedDay_detail = selectedDay.toString(QtCore.Qt.ISODate)
+        selectedDay_day = selectedDay.day()
+        selectedDay_month = selectedDay.month()
+        selectedDay_year = selectedDay.year()
 
         self.loadUserData_toTable()
 
@@ -429,14 +465,14 @@ class MainView(QMainWindow):
             (3) 전역변수 periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year 에 해당 정보 저장
     '''
     def getPeriodStartDay(self):
-        global periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year
+        global periodStartDay, periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year
         periodStartDay = UI_set.DE_periodStartDay.date()
-        periodStartDay_detail = str(periodStartDay.year()) + "-" + str(periodStartDay.month()) + "-" + str(periodStartDay.day())
+        periodStartDay_detail = periodStartDay.toString(QtCore.Qt.ISODate)
         periodStartDay_day = periodStartDay.day()
         periodStartDay_month = periodStartDay.month()
         periodStartDay_year = periodStartDay.year()
-        print(periodStartDay_detail)
 
+        self.generatePeriodList()
         self.loadUserData_toTable()
 
     '''
@@ -447,14 +483,15 @@ class MainView(QMainWindow):
             (3) 전역변수 periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year 에 해당 정보 저장
     '''
     def getPeriodEndDay(self):
-        global periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year
+        global periodEndDay, periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year
         periodEndDay = UI_set.DE_periodEndDay.date()
-        periodEndDay_detail = str(periodEndDay.year()) + "-" + str(periodEndDay.month()) + "-" + str(periodEndDay.day())
+        periodEndDay_detail = periodEndDay.toString(QtCore.Qt.ISODate)
         periodEndDay_day = periodEndDay.day()
         periodEndDay_month = periodEndDay.month()
         periodEndDay_year = periodEndDay.year()
-        print(periodEndDay_detail)
 
+        self.generatePeriodList()
+        self.loadUserData_toTable()
     '''
         #. Name: getAddItem_typeMoney()
         #. Feature

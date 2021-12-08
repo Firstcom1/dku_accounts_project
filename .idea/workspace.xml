@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3af1b0f6-001c-4a59-812e-b460b65b5478" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/comparisonST.ui" beforeDir="false" afterPath="$PROJECT_DIR$/comparisonST.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/accounts_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dku_accounts_project.py" beforeDir="false" afterPath="$PROJECT_DIR$/dku_accounts_project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dku_accounts_project_delete_test_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dku_accounts_project_delete_test_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/소득구간별_가구당_가계지출.csv" beforeDir="false" afterPath="$PROJECT_DIR$/소득구간별_가구당_가계지출.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
