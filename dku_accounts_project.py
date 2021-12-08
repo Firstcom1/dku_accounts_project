@@ -79,10 +79,11 @@ addItem_amountMoney = 0  # dataType: Str
 addItem_commentMoney = 0  # dataType: Str
 addItem_fixedMoney = 0  # dataType: Bool
 
-total_income= 0  # dataType: Int, 한달 수입
+total_income = 0  # dataType: Int, 한달 수입
 m_total_expd = 0  # dataType: Int, 한달 지출
 d_total_expd = 0  # dataType: Int, 하루 지출
-d_total_income=0 # dataType: Int, 하루 수입
+m_total_income =0
+d_total_income = 0 # dataType: Int, 하루 수입
 
 class MainView(QMainWindow):
     def __init__(self):
@@ -263,7 +264,7 @@ class MainView(QMainWindow):
         '''
 
     def reNewData(self):
-        global total_income,m_total_expd,d_total_expd
+        global total_income,m_total_expd,d_total_expd, m_total_income, d_total_income
         
         stat2 = pd.read_csv("./accounts_data.csv")
         df1 = pd.DataFrame(columns=range(6))
@@ -832,6 +833,7 @@ class MainView(QMainWindow):
                 ErrorUI.LB_categoryError.setText("")
 
             ErrorUI.show()
+            return
 
         addItem_toString = list()
         addItem_toString.append(addItem_typeMoney)
