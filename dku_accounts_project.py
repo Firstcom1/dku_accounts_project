@@ -78,7 +78,7 @@ addItem_amountMoney = 0  # dataType: Str
 addItem_commentMoney = 0  # dataType: Str
 addItem_fixedMoney = 0  # dataType: Bool
 
-total_income = 0  # dataType: Int, 한달 수입
+total_income= 0  # dataType: Int, 한달 수입
 m_total_expd = 0  # dataType: Int, 한달 지출
 d_total_expd = 0  # dataType: Int, 하루 지출
 
@@ -249,14 +249,14 @@ class MainView(QMainWindow):
     '''
         #. Name: fixIncome()
         #. Feature
-            (1) 수입카테고리 고정
+            (1) 수입카테고리 고정reNew
         '''
 
     def fixIncome(self):
         income_stat2 = stat2.loc[stat2['type'] == '수입']
 
     '''
-        #. Name: reNewData()
+        #. Name: Data()
         #. Feature
             (1) 총 수입, 총 지출량 갱신
         '''
@@ -779,7 +779,6 @@ class MainView(QMainWindow):
         addItem_date = UI_set.DE_dateMoney.date()
         addItem_dateMoney = QtCore.QDate(addItem_date.year(), addItem_date.month(), addItem_date.day())
         addItem_dateMoney = addItem_dateMoney.toString(QtCore.Qt.ISODate)
-        print(addItem_dateMoney)
 
     '''
         #. Name: getAddItem_categoryMoney()
@@ -839,6 +838,7 @@ class MainView(QMainWindow):
         userDataFile.write(addItem_toString)
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal()
 
     '''
         #. Name: closeError()
