@@ -27,8 +27,21 @@ viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Ra
 VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
 VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
 
+COL_TYPE_IDX = 0 # dateType: Int, purpose: 상수 for 데이터파일 현금흐름 유형(열-헤더) 식별
 COL_DATE_IDX = 1 # dateType: Int, purpose: 상수 for 데이터파일 날짜(열-헤더) 식별
-COL_CATEGORY_IDX = 2 # dateType: Int, purpose: 상수 for 데이터파일 날짜(열-헤더) 식별
+COL_CATEGORY_IDX = 2 # dateType: Int, purpose: 상수 for 데이터파일 카테고리(열-헤더) 식별
+
+currentTableObject = None # dateType: QTabWidget, purpose: loadUserData_toFile에서 탭 종류 식별
+currentTabType = list() # dateType: list, purpose: loadUserData_toFile에서 현금흐름 유형 종류 식별
+
+isFixExp = False
+isFixIncome = False
+currentFixCategory_Exp = 0
+currentFixCategory_Income = 0
+
+TAB_ALL_ACCOUNT = 0
+TAB_EXP = 1
+TAB_INCOME = 2
 
 selectedDay = None # dateType: QtDate
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
@@ -75,10 +88,17 @@ class MainView(QMainWindow):
         ErrorUI = QtUiTools.QUiLoader().load(resource_path("./addError.ui"))
         ComparisonSTUI = QtUiTools.QUiLoader().load(resource_path("./ComparisonST.ui"))
 
+        global currentTableObject, currentTabType
         global addItem_typeMoney, addItem_dateMoney, addItem_categoryMoney
         global selectedDay, selectedDay_detail, selectedDay_year, selectedDay_month, selectedDay_day
         global periodStartDay, periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
         global periodEndDay, periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
+
+        # TAB_displayType의 TAB이 전환될 때 -> loadUserData_toFile() 과 유기적 연결 필요
+        currentTableObject = UI_set.TW_displayAllAccounts # Default값: 전체 출납목록 TW
+        currentTabType = ['지출', '수입']
+        UI_set.TAB_displayType.setCurrentIndex(0)
+        UI_set.TAB_displayType.currentChanged.connect(self.getCurrentTableObject)
 
         self.openUserDataFile() # accounts_data.csv 파일 (rt+)모드로 오픈
         self.loadUserData_toTable() # 처음 실행 시 파일데이터 전체를 "전체 출납목록"에 출력
@@ -90,6 +110,18 @@ class MainView(QMainWindow):
         # TAB_displayType의 CB(ComboBox)_fixIncomeCategory 목록 작성
         UI_set.CB_fixIncomeCategory.addItems(categoryIncome)
         UI_set.CB_fixIncomeCategory_2.addItems(categoryIncome)
+
+        # 지출/수입 카테고리 CH(CheckBox)가 활성화
+        UI_set.CH_fixExpCategory.stateChanged.connect(self.isFixCategory)
+        UI_set.CH_fixExpCategory_2.stateChanged.connect(self.isFixCategory)
+        UI_set.CH_fixIncomeCategory.stateChanged.connect(self.isFixCategory)
+        UI_set.CH_fixIncomeCategory_2.stateChanged.connect(self.isFixCategory)
+
+        #
+        UI_set.CB_fixExpCategory.currentTextChanged.connect(self.fixCategory_Exp)
+        UI_set.CB_fixExpCategory_2.currentTextChanged.connect(self.fixCategory_Exp)
+        UI_set.CB_fixIncomeCategory.currentTextChanged.connect(self.fixCategory_Income)
+        UI_set.CB_fixIncomeCategory_2.currentTextChanged.connect(self.fixCategory_Income)
 
         # TW(TableWidget)의 열_헤더부분 활성화
         UI_set.TW_displayAllAccounts.horizontalHeader().setVisible(True)
@@ -112,7 +144,7 @@ class MainView(QMainWindow):
         selectedDay_day = selectedDay.day()
         selectedDay_month = selectedDay.month()
         selectedDay_year = selectedDay.year()
-        # >>>> Part2: [일별 조회] Default값: 사용자 초기값 변경 시
+        # >>>> Part2: [일별 조회] 사용자 초기값 변경 시, 변경값 받아오기
         UI_set.CW_selectDay.clicked.connect(self.getSelectedDay)
 
         # 조회방법: "기간별 조회"에서 "조회 시작일" 정보를 받아서 전역변수에 저장
@@ -122,7 +154,7 @@ class MainView(QMainWindow):
         periodStartDay_day = periodStartDay.day()
         periodStartDay_month = periodStartDay.month()
         periodStartDay_year = periodStartDay.year()
-        # >>>> Part2: [조회 시작일] Default값: 사용자 초기값 변경 시
+        # >>>> Part2: [조회 시작일] 사용자 초기값 변경 시, 변경값 받아오기
         UI_set.DE_periodStartDay.dateChanged.connect(self.getPeriodStartDay)
 
         # 조회방법: "기간별 조회"에서 "조회 종료일" 정보를 받아서 전역변수에 저장
@@ -132,7 +164,7 @@ class MainView(QMainWindow):
         periodEndDay_day = periodEndDay.day()
         periodEndDay_month = periodEndDay.month()
         periodEndDay_year = periodEndDay.year()
-        # >>>> Part2: [조회 종료일] Default값: 사용자 초기값 변경 시
+        # >>>> Part2: [조회 종료일] 사용자 초기값 변경 시, 변경값 받아오기
         UI_set.DE_periodEndDay.dateChanged.connect(self.getPeriodEndDay)
 
         # 항목추가 中 "현금흐름 유형"에 대한 정보를 받아 전역변수에 저장
@@ -166,7 +198,7 @@ class MainView(QMainWindow):
         ComparisonSTUI.BT_compST.clicked.connect(self.getBothCategoryChart)
         
         #'재무 현황 새로고침' 누를 때 csv파일 읽어오기
-        UI_set.BT_f5.clicked.connect(self.reNewData)
+        #UI_set.BT_f5.clicked.connect(self.reNewData)
 
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
@@ -257,6 +289,14 @@ class MainView(QMainWindow):
     '''
         #. Name: loadUserData_toTable()
         #. Feature
+            (0) 실행조건 [아래는 해당 함수에서 호출 여부를 확인할 수 있습니다.]
+                >>> 프로그램 실행 시 전체 출납목록에 출력을 위해 실행
+                >>> TAB_displayType에서 탭이 전환될 때 / (전체 출납목록) <-> (지출) <-> (수입)
+                >>> "조회 방법" 중 "일별 조회" 활성화
+                >>> "조회 방법" 중 "일별 조회" 조회 일자 변경
+                >>> "조회 방법" 중 "기간별 조회" 활성화 
+                >>> "조회 방법" 중 "기간별 조회" 조회 일자 변경
+                >>> "항목 추가" 중 "항목 추가" 버튼 시 파일 갱신을 위해 실행
             (1) (전체 출납목록)TW(TableWidget)_displayAllAccounts에 accounts_data.csv에 존재하는 모든 데이터 출력
             (2) (지출)TW(TableWidget)_displayExpenditure에 accounts_data.cvs 데이터 中 "지출"에 해당하는 데이터만 출력
             (3) (수입)TW(TableWidget)_displayIncome에 accounts_data.cvs 데이터 中 "수입"에 해당하는 데이터만 출력
@@ -264,22 +304,36 @@ class MainView(QMainWindow):
             (5) (전체 출납목록)(지출)(수입) TW(TableWidget)데이터 (지출)(수입)카테고리 필터링
     '''
     def loadUserData_toTable(self):
-        print(periodStartToEnd)
+        #print(currentFixCategory_Income)
+        #print(currentFixCategory_Exp)
         row = 0
         col = 0
 
         userDataFile.seek(0, 0)
         userData = userDataFile.readlines()
 
-        UI_set.TW_displayAllAccounts.clearContents()
+        currentTableObject.clearContents()
         for i in range(len(userData)):
-            UI_set.TW_displayAllAccounts.removeRow(0)
+            currentTableObject.removeRow(0)
 
         for dataSet in userData:
             dataFrag = dataSet.split(",")
             dataFrag[-1].replace("\n", "")
 
-            if viewSelectedWay == None: # 날짜 필터링
+            for typeMoney in currentTabType: # (1) 현금흐름 유형 필터링
+                type_flag = False
+                if dataFrag[COL_TYPE_IDX] == typeMoney:
+                    type_flag = True
+                    break
+                else:
+                    type_flag = False
+            if type_flag == True:
+                pass
+            else:
+                continue
+
+
+            if viewSelectedWay == None: # (2) 날짜 필터링
                 pass
             elif viewSelectedWay == VIEW_ONEDAY:
                 if dataFrag[COL_DATE_IDX] != selectedDay_detail:
@@ -287,27 +341,42 @@ class MainView(QMainWindow):
                 else:
                     pass
             elif viewSelectedWay == VIEW_PREIOD:
-                flag = False
+                exist_flag = False
                 for elementOfPeriod in periodStartToEnd:
                     if dataFrag[COL_DATE_IDX] == elementOfPeriod:
-                        flag = True
+                        exist_flag = True
                         break
                     else:
                         flag = False
-                if flag == True:
+                if exist_flag == True:
                     pass
-                elif flag == False:
+                elif exist_flag == False:
                     continue
 
-            UI_set.TW_displayAllAccounts.insertRow(row)
+            if isFixExp == True: # (3) 카테고리 필터링
+                if dataFrag[COL_CATEGORY_IDX] != currentFixCategory_Exp:
+                    continue
+            if isFixIncome == True:
+                if dataFrag[COL_CATEGORY_IDX] != currentFixCategory_Income:
+                    continue
+
+            currentTableObject.insertRow(row)
             for dataFragText in dataFrag:
-                UI_set.TW_displayAllAccounts.setItem(row, col, QTableWidgetItem(dataFragText))
+                currentTableObject.setItem(row, col, QTableWidgetItem(dataFragText))
                 col = col + 1
             row = row + 1
             col = 0
 
-        userDataFile.seek(0)
-
+    '''
+        #. Name: generatePeriodList()
+        #. Feature
+            (0) 실행조건 
+                >>> "조회 방법" 그룹에서 "기간별 조회"를 활성화 시켰을 때
+                >>> "기간별 조회"에서 "조회 시작일"과 "조회 종료일"을 변경시켰을 때 
+            (1) 사용자가 설정한 기간 내 모든 날에 대한 QDate를 생성한다.
+            (2) QDate를 Str 형식으로 변환하여 periodStartToEnd에 리스트로 append하여 저장한다.
+            (3) periodStartToEnd(dataType: List)는 loadUserData_toFile()에서 데이터와 날짜 비교 시 사용된다.
+    '''
     def generatePeriodList(self): # 기간별 조회에서 기간에 해당하는 모든 날의 Str값을 받아온다.
         global periodStartToEnd
         periodStartToEnd.clear()
@@ -326,6 +395,79 @@ class MainView(QMainWindow):
             index = index + 1
 
     '''
+        #. Name: getCurrentTableObject()
+        #. Feature
+            (1) currentTableObject에 현재 UI 상에 표시되고 있는 TW객체 변경
+            (2) currentTabType에 loadUserData_toFile에서 비교할 현금흐름 유형 지정
+    '''
+    def getCurrentTableObject(self):
+        global currentTableObject # dataType: QTableWidget
+        global currentTabType # dataType: List
+        tabIndex = UI_set.TAB_displayType.currentIndex()
+
+        if tabIndex == TAB_ALL_ACCOUNT:
+            currentTableObject = UI_set.TW_displayAllAccounts
+            currentTabType = ['지출', '수입']
+        elif tabIndex == TAB_EXP:
+            currentTableObject = UI_set.TW_displayExpenditure
+            currentTabType = ['지출']
+        elif tabIndex == TAB_INCOME:
+            currentTableObject = UI_set.TW_displayIncome
+            currentTabType = ['수입']
+
+        self.loadUserData_toTable()
+
+    def isFixCategory(self):
+        global isFixExp, isFixIncome
+
+        if currentTableObject == UI_set.TW_displayAllAccounts:
+            isFixExp = UI_set.CH_fixExpCategory.isChecked()
+            if isFixExp == True:
+                UI_set.CB_fixExpCategory.setEnabled(True)
+            else:
+                UI_set.CB_fixExpCategory.setEnabled(False)
+            isFixIncome = UI_set.CH_fixIncomeCategory.isChecked()
+            if isFixIncome == True:
+                UI_set.CB_fixIncomeCategory.setEnabled(True)
+            else:
+                UI_set.CB_fixIncomeCategory.setEnabled(False)
+        elif currentTableObject == UI_set.TW_displayExpenditure:
+            isFixExp = UI_set.CH_fixExpCategory_2.isChecked()
+            if isFixExp == True:
+                UI_set.CB_fixExpCategory_2.setEnabled(True)
+            else:
+                UI_set.CB_fixExpCategory_2.setEnabled(False)
+        elif currentTableObject == UI_set.TW_displayIncome:
+            isFixIncome = UI_set.CH_fixIncomeCategory_2.isChecked()
+            if isFixIncome == True:
+                UI_set.CB_fixIncomeCategory_2.setEnabled(True)
+            else:
+                UI_set.CB_fixIncomeCategory_2.setEnabled(False)
+
+
+        self.loadUserData_toTable()
+
+    def fixCategory_Exp(self):
+        global currentFixCategory_Exp
+
+        if currentTableObject == UI_set.TW_displayAllAccounts:
+            currentFixCategory_Exp = UI_set.CB_fixExpCategory.currentText()
+        elif currentTableObject == UI_set.TW_displayExpenditure:
+            currentFixCategory_Exp = UI_set.CB_fixExpCategory_2.currentText()
+
+        self.loadUserData_toTable()
+
+    def fixCategory_Income(self):
+        global currentFixCategory_Income
+
+        if currentTableObject == UI_set.TW_displayAllAccounts:
+            currentFixCategory_Income = UI_set.CB_fixIncomeCategory.currentText()
+        elif currentTableObject == UI_set.TW_displayIncome:
+            currentFixCategory_Income = UI_set.CB_fixIncomeCategory_2.currentText()
+
+        self.loadUserData_toTable()
+
+    '''
         #. Name: EnableViewDay()
         #. Feature
             (1) 켈린더 위젯 활성화, 기간설정 DateEdit 위젯 비활성화
@@ -339,6 +481,7 @@ class MainView(QMainWindow):
         UI_set.DE_periodStartDay.setEnabled(0)
         UI_set.DE_periodEndDay.setEnabled(0)
 
+        self.loadUserData_toTable()
     '''
         #. Name: EnableViewPeriod()
         #. Feature
@@ -420,6 +563,7 @@ class MainView(QMainWindow):
             (1) 실행조건 : CalendarWidget에서 사용자가 특정 날짜를 선택했을 때
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year 에 해당 정보 저장
+            (4) loadUserData_toTable()를 호출하야 테이블 출력도 갱신
         '''
     def getSelectedDay(self):
         global selectedDay, selectedDay_detail, selectedDay_day, selectedDay_month, selectedDay_year
@@ -437,6 +581,7 @@ class MainView(QMainWindow):
             (1) 실행조건 : 사용자가 DE_periodStartDay에서 날짜를 변경했을 때
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year 에 해당 정보 저장
+            (4) loadUserData_toTable()를 호출하야 테이블 출력도 갱신
     '''
     def getPeriodStartDay(self):
         global periodStartDay, periodStartDay_detail, periodStartDay_day, periodStartDay_month, periodStartDay_year
@@ -455,6 +600,7 @@ class MainView(QMainWindow):
             (1) 실행조건 : 사용자가 DE_periodEndDay에서 날짜를 변경했을 떄
             (2) QDate 형식의 사용자가 선택한 특정 날짜 정보가 담긴 객체 받아옴.
             (3) 전역변수 periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year 에 해당 정보 저장
+            (4) loadUserData_toTable()를 호출하야 테이블 출력도 갱신
     '''
     def getPeriodEndDay(self):
         global periodEndDay, periodEndDay_detail, periodEndDay_day, periodEndDay_month, periodEndDay_year
@@ -466,23 +612,6 @@ class MainView(QMainWindow):
 
         self.generatePeriodList()
         self.loadUserData_toTable()
-    '''
-           #. Name: viewByDay()
-           #. Feature
-               (1) 사용자가 선택한 특정 날짜의 내역만 보여줌
-    '''
-
-    def viewByDay(self):
-        stat2 = stat2.loc[(stat2["date"]==selectedDay_detail), :]
-
-    '''
-            #. Name: viewByPeriod()
-            #. Feature
-                (1) 사용자가 선택한 특정기간동안의 내역만 보여줌
-        '''
-
-    def viewByPeriod(self):
-        stat2=stat2.loc[(stat2["date"]>=periodStartDay_detail) & (stat2["date"]<=periodEndDay_detail),:]        
         
     '''
         #. Name: getAddItem_typeMoney()
@@ -515,7 +644,9 @@ class MainView(QMainWindow):
     def getAddItem_dateMoney(self):
         global addItem_dateMoney
         addItem_date = UI_set.DE_dateMoney.date()
-        addItem_dateMoney = str(addItem_date.year()) + "-" + str(addItem_date.money()) + "-" + str(addItem_date.day())
+        addItem_dateMoney = QtCore.QDate(addItem_date.year(), addItem_date.month(), addItem_date.day())
+        addItem_dateMoney = addItem_dateMoney.toString(QtCore.Qt.ISODate)
+        print(addItem_dateMoney)
 
     '''
         #. Name: getAddItem_categoryMoney()
@@ -555,6 +686,20 @@ class MainView(QMainWindow):
                 ErrorUI.LB_categoryError.setText("")
 
             ErrorUI.show()
+
+        addItem_toString = list()
+        addItem_toString.append(addItem_typeMoney)
+        addItem_toString.append(addItem_dateMoney)
+        addItem_toString.append(addItem_categoryMoney)
+        addItem_toString.append(addItem_placeMoney)
+        addItem_toString.append(addItem_amountMoney)
+        addItem_toString.append(addItem_commentMoney + '\n')
+        addItem_toString = ",".join(addItem_toString)
+
+        userDataFile.seek(0, 2)
+        userDataFile.write(addItem_toString)
+
+        self.loadUserData_toTable()
 
     '''
         #. Name: closeError()

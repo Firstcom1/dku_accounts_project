@@ -37,7 +37,7 @@
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <property name="iconSize">
            <size>
@@ -65,17 +65,25 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixExpCategory"/>
+                 <widget class="QComboBox" name="CB_fixExpCategory">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="CH_fixIncomCategory">
+                 <widget class="QCheckBox" name="CH_fixIncomeCategory">
                   <property name="text">
                    <string>수입 카테고리 지정</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixIncomeCategory"/>
+                 <widget class="QComboBox" name="CB_fixIncomeCategory">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <spacer name="horizontalSpacer">
@@ -109,7 +117,7 @@
                    <bool>true</bool>
                   </property>
                   <property name="rowCount">
-                   <number>10</number>
+                   <number>0</number>
                   </property>
                   <property name="columnCount">
                    <number>6</number>
@@ -132,16 +140,6 @@
                   <attribute name="verticalHeaderVisible">
                    <bool>false</bool>
                   </attribute>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
                   <column>
                    <property name="text">
                     <string>현금흐름 유형</string>
@@ -172,36 +170,6 @@
                     <string>코멘트</string>
                    </property>
                   </column>
-                  <item row="0" column="0">
-                   <property name="text">
-                    <string>지출</string>
-                   </property>
-                  </item>
-                  <item row="0" column="1">
-                   <property name="text">
-                    <string>2021-12-12</string>
-                   </property>
-                  </item>
-                  <item row="0" column="2">
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item row="0" column="3">
-                   <property name="text">
-                    <string>하남돼지</string>
-                   </property>
-                  </item>
-                  <item row="0" column="4">
-                   <property name="text">
-                    <string>24,000</string>
-                   </property>
-                  </item>
-                  <item row="0" column="5">
-                   <property name="text">
-                    <string>알바 회식</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                </layout>
@@ -227,7 +195,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixExpCategory_2"/>
+                 <widget class="QComboBox" name="CB_fixExpCategory_2">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <spacer name="horizontalSpacer_2">
@@ -252,7 +224,7 @@
                    <bool>true</bool>
                   </property>
                   <property name="rowCount">
-                   <number>10</number>
+                   <number>0</number>
                   </property>
                   <property name="columnCount">
                    <number>6</number>
@@ -272,16 +244,6 @@
                   <attribute name="verticalHeaderVisible">
                    <bool>false</bool>
                   </attribute>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
                   <column>
                    <property name="text">
                     <string>현금흐름 유형</string>
@@ -312,36 +274,6 @@
                     <string>코멘트</string>
                    </property>
                   </column>
-                  <item row="0" column="0">
-                   <property name="text">
-                    <string>지출</string>
-                   </property>
-                  </item>
-                  <item row="0" column="1">
-                   <property name="text">
-                    <string>2021-12-12</string>
-                   </property>
-                  </item>
-                  <item row="0" column="2">
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item row="0" column="3">
-                   <property name="text">
-                    <string>하남돼지</string>
-                   </property>
-                  </item>
-                  <item row="0" column="4">
-                   <property name="text">
-                    <string>24,000</string>
-                   </property>
-                  </item>
-                  <item row="0" column="5">
-                   <property name="text">
-                    <string>알바 회식</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                </layout>
@@ -360,14 +292,18 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <item>
-                 <widget class="QCheckBox" name="CH_fixIncomCategory_2">
+                 <widget class="QCheckBox" name="CH_fixIncomeCategory_2">
                   <property name="text">
                    <string>수입 카테고리 지정</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="CB_fixIncomeCategory_2"/>
+                 <widget class="QComboBox" name="CB_fixIncomeCategory_2">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <spacer name="horizontalSpacer_3">
@@ -392,7 +328,7 @@
                    <bool>true</bool>
                   </property>
                   <property name="rowCount">
-                   <number>10</number>
+                   <number>0</number>
                   </property>
                   <property name="columnCount">
                    <number>6</number>
@@ -418,16 +354,6 @@
                   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
                    <bool>false</bool>
                   </attribute>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
-                  <row/>
                   <column>
                    <property name="text">
                     <string>현금흐름 유형</string>
@@ -458,36 +384,6 @@
                     <string>코멘트</string>
                    </property>
                   </column>
-                  <item row="0" column="0">
-                   <property name="text">
-                    <string>지출</string>
-                   </property>
-                  </item>
-                  <item row="0" column="1">
-                   <property name="text">
-                    <string>2021-12-12</string>
-                   </property>
-                  </item>
-                  <item row="0" column="2">
-                   <property name="text">
-                    <string>식사</string>
-                   </property>
-                  </item>
-                  <item row="0" column="3">
-                   <property name="text">
-                    <string>하남돼지</string>
-                   </property>
-                  </item>
-                  <item row="0" column="4">
-                   <property name="text">
-                    <string>24,000</string>
-                   </property>
-                  </item>
-                  <item row="0" column="5">
-                   <property name="text">
-                    <string>알바 회식</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                </layout>
@@ -992,19 +888,6 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </item>
-    <item alignment="Qt::AlignHCenter">
-     <widget class="QPushButton" name="BT_f5">
-      <property name="font">
-       <font>
-        <family>Agency FB</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>재무현황 새로고침</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -1013,7 +896,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1300</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
