@@ -271,11 +271,11 @@ class MainView(QMainWindow):
 
         for i in set(stat2["date"].values):
             if (str(now_month) in i):
-                df1 = df1.append(stat2.loc[(new_df['date'] == i)])  # 이번 달 내역만 있는 데이터프레임
+                df1 = df1.append(stat2.loc[(stat2['date'] == i)])  # 이번 달 내역만 있는 데이터프레임
         
         for i in set(stat2["date"].values):
             if (now_day.strftime("%Y-%m-%d") in i):
-                df2 = df2.append(stat2.loc[(new_df['date'] == i)])  #오늘 내역만 있는 데이터프레임
+                df2 = df2.append(stat2.loc[(stat2['date'] == i)])  #오늘 내역만 있는 데이터프레임
             else:
                 df2=df2.append([0])
 
