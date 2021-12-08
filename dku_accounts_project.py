@@ -20,15 +20,15 @@ categoryIncome = ['수입 카테고리', '경상소득', '비경상소득']  # d
 today=datetime.today().day #현재 일 , dataType: Int
 now_month=datetime.today().month #현재 달, dataType: Int
 
-# stat = pd.read_csv("./가구당_월평균_가계수지.csv")
-# stat2 = pd.read_csv("./accounts_data.csv")
+stat = pd.read_csv("./가구당_월평균_가계수지.csv")
+stat2 = pd.read_csv("./accounts_data.csv")
 
 viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
 VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
 VIEW_PREIOD = 2 # dateType: Int, purpose: 상수 for "기간 조회" 식별
 
-COL_DATE_IDX = 1
-COL_CATEGORY_IDX = 2
+COL_DATE_IDX = 1 # dateType: Int, purpose: 상수 for 데이터파일 날짜(열-헤더) 식별
+COL_CATEGORY_IDX = 2 # dateType: Int, purpose: 상수 for 데이터파일 날짜(열-헤더) 식별
 
 selectedDay = None # dateType: QtDate
 selectedDay_detail = 0 # dataType: Str, form: "2021-02-02"
@@ -80,8 +80,8 @@ class MainView(QMainWindow):
         global periodStartDay, periodStartDay_detail, periodStartDay_year, periodStartDay_month, periodStartDay_day
         global periodEndDay, periodEndDay_detail, periodEndDay_year, periodEndDay_month, periodEndDay_day
 
-        self.openUserDataFile()
-        self.loadUserData_toTable()
+        self.openUserDataFile() # accounts_data.csv 파일 (rt+)모드로 오픈
+        self.loadUserData_toTable() # 처음 실행 시 파일데이터 전체를 "전체 출납목록"에 출력
 
         # TAB_displayType의 CB(ComboBox)_fixExpCategory 목록 작성
         UI_set.CB_fixExpCategory.addItems(categoryExp)
@@ -249,7 +249,7 @@ class MainView(QMainWindow):
     def openUserDataFile(self):
         global userDataFile
         try:
-            userDataFile = open("accounts_data.csv", "rt+")
+            userDataFile = open("accounts_data.csv", "rt+", encoding="UTF8")
         except:
             sys.stderr.write("No file: %s\n" % "accounts_data.csv")
             exit(1)
