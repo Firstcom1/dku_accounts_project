@@ -24,8 +24,8 @@ categoryIncome = ['수입 카테고리', '경상소득', '비경상소득']  # d
 today=datetime.today().day #현재 일 , dataType: Int
 now_month=datetime.today().month #현재 달, dataType: Int
 
-# stat = pd.read_csv("./가구당_월평균_가계수지.csv")
-# stat2 = pd.read_csv("./accounts_data.csv")
+stat = pd.read_csv("./가구당_월평균_가계수지.csv")
+stat2 = pd.read_csv("./accounts_data.csv")
 
 viewSelectedWay = None # dateType: Int, purpose: "조회 방법"(Group)에 RB(Radio Button) 활성화 옵션값 저장,  VIEW_ONEDAY, VIEW_PERIOD 둘 중 하나로 초기화
 VIEW_ONEDAY = 1 # dateType: Int, purpose: 상수 for "일별 조회" 식별
@@ -78,9 +78,10 @@ addItem_amountMoney = 0 # dataType: Str
 addItem_commentMoney = 0 # dataType: Str
 addItem_fixedMoney = 0 # dataType: Bool
 
-m_total_income=0 #dataType: Int, 한달 수입
-m_total_expd=0 #dataType: Int, 한달 지출
-d_total_expd=0 #dataType: Int, 하루 지출
+total_income = 0
+m_total_income = 0 #dataType: Int, 한달 수입
+m_total_expd = 0 #dataType: Int, 한달 지출
+d_total_expd = 0 #dataType: Int, 하루 지출
 
 class MainView(QMainWindow):
     def __init__(self):
@@ -211,6 +212,9 @@ class MainView(QMainWindow):
         #'재무 현황 새로고침' 누를 때 csv파일 읽어오기
         #UI_set.BT_f5.clicked.connect(self.reNewData)
 
+        self.reNewData()
+        self.printMoneyState()
+
         # 항목추가 에러UI에서 '확인'버튼을 눌렀을 때 UI를 닫는다.
         ErrorUI.BT_close.clicked.connect(self.closeError)
 
@@ -245,7 +249,7 @@ class MainView(QMainWindow):
         #. Name: fixIncome()
         #. Feature
             (1) 수입카테고리 고정
-        '''
+    '''
     def fixIncome(self):
         income_stat2 = stat2.loc[stat2['type'] == '수입']
 
@@ -253,19 +257,19 @@ class MainView(QMainWindow):
         #. Name: reNewData()
         #. Feature
             (1) 총 수입, 총 지출량 갱신
-        '''
+    '''
     def reNewData(self):
+        global total_income, m_total_expd, d_total_expd
         stat2=pd.read_csv("./accounts_data.csv")
         total_income=stat2.loc[(stat2['type']=='수입') & (str(now_month) in stat2["date"]),"balance"].sum()
         m_total_expd = stat2.loc[(stat2['type'] == '지출') & (str(now_month) in stat2["date"]), "balance"].sum() #한달 지출합계
-        d_total_expd=stat2.loc[(stat2['type'] == '지출') & ( str(today) in stat2["date"]), "balance"].sum() #하루 지출합계  
+        d_total_expd=stat2.loc[(stat2['type'] == '지출') & ( str(today) in stat2["date"]), "balance"].sum() #하루 지출합계
       
     '''
         #. Name: printMonth()
         #. Feature
             (1) 재무 현황에 무슨 달인지 프린트
     '''
-    
     def printMonth(self):
         UI_set.LB_monthState.setText("%d월 한달 재무현황" %now_month)
 
@@ -433,6 +437,7 @@ class MainView(QMainWindow):
 
         self.loadUserData_toTable()
         self.listenRemoveSignal() # loadUserData_toTable() 호출 이후 "삭제" 버튼 객체가 모조리 재생성 되므로 setupUI()상에 존재하는 이벤트 대상 버튼을 갱신해줘야 한다.
+        self.reNewData()
 
     '''
         #. Name: generatePeriodList()
@@ -744,7 +749,6 @@ class MainView(QMainWindow):
         addItem_date = UI_set.DE_dateMoney.date()
         addItem_dateMoney = QtCore.QDate(addItem_date.year(), addItem_date.month(), addItem_date.day())
         addItem_dateMoney = addItem_dateMoney.toString(QtCore.Qt.ISODate)
-        print(addItem_dateMoney)
 
     '''
         #. Name: getAddItem_categoryMoney()
@@ -784,6 +788,7 @@ class MainView(QMainWindow):
                 ErrorUI.LB_categoryError.setText("")
 
             ErrorUI.show()
+            return
 
         addItem_toString = list()
         addItem_toString.append(addItem_typeMoney)
@@ -801,6 +806,9 @@ class MainView(QMainWindow):
         userDataFile.write(addItem_toString)
 
         self.loadUserData_toTable()
+        self.listenRemoveSignal()
+        self.printMoneyState()
+        self.reNewData()
 
     '''
         #. Name: closeError()
